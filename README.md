@@ -2,6 +2,8 @@
 
 Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
 
+To generate PDF instead send mails, see this project: [poc-generate-pdf-with-html-template-and-jsonschema](https://github.com/harobed/poc-generate-pdf-with-html-template-and-jsonschema)
+
 ## Why this project?
 
 - I would like to move transactionnal mail engine from my application in a separate service
