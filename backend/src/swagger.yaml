@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  version: "0.1.0"
+  title: "poc-send-mails-with-template-and-jsonschema"
+  contact:
+    email: "contact@stephane-klein.info"
+paths:
+  /v1/templates:
+    get:
+      summary: "Get template name list"
+      responses:
+        '200':
+          description: Template list names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+                example:
+                  - "confirm_email"
+                  - "recover_account"
+                  - "welcome_email"
+  
+  /v1/templates/{name}:
+    get:
+      summary: "Get template JSON Schema by template name"
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Template name
+      responses:
+        '200':
+          description: JSON Schema
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  type: object
+                  required:
+                    - from
+                    - to
+                    - username
+                  properties:
+                    application_name:
+                      type: string
+                      default: My application
+                    from:
+                      type: string
+                    to:
+                      type: string
+                    username:
+                      type: string
+                    is_new_user:
+                      type: boolean
+
+  /v1/templates/{name}/preview:
+    post:
+      summary: "Preview subject, html and txt email from template"
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Template name
+      requestBody:
+        description: Json data used to fill template
+        required: true
+        content:
+           application/json:
+            schema: 
+              type: object
+              example:
+                from: "no-reply@example.com"
+                to: "john.doe@example.com"
+                username: "john-doe"
+                is_new_user: "true"
+      responses:
+        '200':
+          description: Preview fields
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  subject:
+                    type: string
+                    description: Subject email preview
+                  html:
+                    type: string
+                    description: Html email preview
+                  txt:
+                    type: string
+                    description: Txt email preview
+                example:
+                  subject: "[My app] Confirm Email"
+                  html: <html>...
+                  txt: Hi John Doe...
+
+  /v1/templates/{name}/send:
+    post:
+      summary: "Send email from template"
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Template name
+      requestBody:
+        description: Json data used to fill template
+        required: true
+        content:
+           application/json:
+            schema: 
+              type: object
+              example:
+                from: "no-reply@example.com"
+                to: "john.doe@example.com"
+                username: "john-doe"
+                is_new_user: "true"
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: 
+                type: object

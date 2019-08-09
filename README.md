@@ -22,11 +22,11 @@ To generate PDF instead send mails, see this project: [poc-generate-pdf-with-htm
 - [x] Docker Image (`harobed/poc-send-mails-with-template-and-jsonschema:latest`)
 - [x] curl example
 - [x] Screencast
+- [x] Swagger
 - [ ] Add [UISchema](https://react-jsonschema-form.readthedocs.io/en/latest/) support
 - [ ] Check json input with JSON Schema
 - [ ] Test frontend
 - [ ] Configure CI
-- [ ] Swagger
 - [ ] Add option to save mail sent (in PostgreSQL)
 
 
@@ -51,6 +51,7 @@ To generate PDF instead send mails, see this project: [poc-generate-pdf-with-htm
   - [`mjmlio/mjml`](https://github.com/mjmlio/mjml) to generate Html email
   - [Nunjucks](https://mozilla.github.io/nunjucks/) to fill Email templates
   - [nodemailer](https://nodemailer.com) to send email
+  - [Swagger](https://swagger.io/tools/swagger-ui/) (see [swagger.yaml](backend/src/swagger.yaml) file)
 - [Frontend](frontend/)
   - [ReactJS](https://en.reactjs.org/), [Axios](https://github.com/axios/axios), [React-router](https://github.com/ReactTraining/react-router)
   - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) to generate Form from JSON Schema (need Bootstrap version `v3.3.6`)

@@ -6,6 +6,7 @@ const koaStatic = require('koa-static');
 const cors = require('@koa/cors');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const koaSwagger = require('koa2-swagger-ui');
 
 const mjml2html = require('mjml');
 const nunjucks = require('nunjucks');
@@ -18,6 +19,11 @@ router.get('/v1/', (ctx) => {
     ctx.body = {
         version: '0.1.0'
     };
+});
+
+router.get('/v1/swagger.yaml', (ctx) => {
+    ctx.type = 'text/yaml';
+    ctx.body = fs.createReadStream(path.join(__dirname, 'swagger.yaml'));
 });
 
 router.get('/v1/templates/', (ctx) => {
@@ -169,6 +175,15 @@ module.exports = function createApp(port, templatePath, staticPath, smtpUrl) {
     app.use(bodyParser());
     app.use(cors());
     app.use(router.routes());
+    app.use(
+        koaSwagger({
+            routePrefix: '/docs/',
+            swaggerOptions: {
+                url: '/v1/swagger.yaml'
+            },
+            hideTopbar: true
+        })
+    );
 
     if (staticPath) {
         app.use(koaStatic(staticPath));

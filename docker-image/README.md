@@ -8,6 +8,8 @@ Go to http://127.0.0.1:5000
 
 Access to mailhog: http://127.0.0.1:8025/
 
+Access to Swagger docs: http://127.0.0.1:5000/docs/
+
 
 Curl example:
 

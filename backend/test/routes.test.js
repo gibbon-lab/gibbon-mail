@@ -14,10 +14,21 @@ afterEach(() => {
 
 describe('Route /v1/', () => {
     it('return 200', async () => {
-        const response = await request(server).get('/v1/');
-        expect(response.status).toEqual(200);
+        return request(server)
+            .get('/v1/')
+            .expect(200);
     });
 });
+
+describe('Route /v1/swagger.yaml', () => {
+    it('return 200', async () => {
+        return request(server)
+            .get('/v1/swagger.yaml')
+            .expect(200)
+            .expect('Content-Type', /yaml/);
+    });
+});
+
 
 describe('Route /v1/templates/', () => {
     it('return template list', async () => {
