@@ -2,6 +2,8 @@
 
 Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
 
+Screencast: https://youtu.be/9oih7cZTjk4
+
 To generate PDF instead send mails, see this project: [poc-generate-pdf-with-html-template-and-jsonschema](https://github.com/harobed/poc-generate-pdf-with-html-template-and-jsonschema)
 
 ## Why this project?
@@ -19,7 +21,7 @@ To generate PDF instead send mails, see this project: [poc-generate-pdf-with-htm
 - [x] Add [mailhog](https://github.com/mailhog/MailHog) to test
 - [x] Docker Image (`harobed/poc-send-mails-with-template-and-jsonschema:latest`)
 - [x] curl example
-- [ ] Screencast
+- [x] Screencast
 - [ ] Add [UISchema](https://react-jsonschema-form.readthedocs.io/en/latest/) support
 - [ ] Check json input with JSON Schema
 - [ ] Test frontend
