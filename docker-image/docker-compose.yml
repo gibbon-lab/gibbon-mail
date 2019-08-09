@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  app:
+    image: harobed/poc-send-mails-with-template-and-jsonschema:latest
+    ports:
+     - 5000:5000
+    volumes:
+     - ../mail-templates/:/templates/
+    environment:
+      SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
