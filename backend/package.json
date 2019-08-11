@@ -1,5 +1,5 @@
 {
-  "name": "poc-jsonschema-form-mjml-template-server-backend",
+  "name": "gibbon-mail-backend",
   "version": "1.0.0",
   "private": true,
   "main": "server.js",
@@ -9,10 +9,6 @@
     "lint": "eslint --ignore-path .gitignore .",
     "pretest": "eslint --ignore-path .gitignore .",
     "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/harobed/poc-jsonschema-form-mjml-template-server.git"
   },
   "jest": {
     "testEnvironment": "node"

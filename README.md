@@ -1,4 +1,6 @@
-# Send mails with mjml Template  and JSON Schema
+# Gibbon-mail
+
+Send mails with mjml Template  and JSON Schema.
 
 Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
 
@@ -67,6 +69,10 @@ To generate PDF instead send mails, see this project: [poc-generate-pdf-with-htm
 
 This project hasn't build-in authentication system, it's a internal service in your stack,
 you must protect it by a private network or [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) system.
+
+### Why « Gibbon-mail » name?
+
+[Gibbon](https://en.wikipedia.org/wiki/Gibbon) as an allusion to [Mandrill App](https://mandrill.com/).
 
 
 ---
