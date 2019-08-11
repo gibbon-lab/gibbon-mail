@@ -11,5 +11,5 @@ cd $(dirname "$0")
 
 (
     cd ..
-    docker build . -f docker-image/Dockerfile -t harobed/poc-send-mails-with-template-and-jsonschema:latest
+    docker build . -f docker-image/Dockerfile -t harobed/gibbon-mail:latest
 )

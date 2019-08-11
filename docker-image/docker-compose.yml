@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   app:
-    image: harobed/poc-send-mails-with-template-and-jsonschema:latest
+    image: harobed/gibbon-mail:latest
     ports:
      - 5000:5000
     volumes:
