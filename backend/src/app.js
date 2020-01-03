@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
 
 const Koa = require('koa');
 const koaStatic = require('koa-static');
@@ -12,7 +13,7 @@ const mjml2html = require('mjml');
 const nunjucks = require('nunjucks');
 const nodemailer = require('nodemailer');
 
-
+const readFile = promisify(fs.readFile);
 const router = new Router();
 
 router.get('/v1/', (ctx) => {
@@ -187,6 +188,11 @@ module.exports = function createApp(port, templatePath, staticPath, smtpUrl) {
 
     if (staticPath) {
         app.use(koaStatic(staticPath));
+        app.use(async (ctx, next) => {
+            ctx.type = 'html';
+            ctx.body = await readFile(`${staticPath}/index.html`);
+            await next();
+        });
     }
 
     return app;
