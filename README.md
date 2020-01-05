@@ -4,9 +4,7 @@ Send mails with mjml Template  and JSON Schema.
 
 Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
 
-Screencast: https://youtu.be/9oih7cZTjk4
-
-To generate PDF instead send mails, see this project: [poc-generate-pdf-with-html-template-and-jsonschema](https://github.com/harobed/poc-generate-pdf-with-html-template-and-jsonschema)
+To generate PDF instead send mails, see this project: [gibbon-pdf](https://github.com/stephane-klein/gibbon-pdf)
 
 ## Why this project?
 
