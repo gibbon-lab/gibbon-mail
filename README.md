@@ -1,8 +1,12 @@
 # Gibbon-mail
 
+![Docker Automated build](https://img.shields.io/docker/automated/stephaneklein/gibbon-mail)
+
 Send mails with mjml Template  and JSON Schema.
 
-Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
+- Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
+- Screencast: https://youtu.be/9oih7cZTjk4
+- Docker Image: https://hub.docker.com/r/stephaneklein/gibbon-mail (Automated Builds configured on `master` branch)
 
 To generate PDF instead send mails, see this project: [gibbon-pdf](https://github.com/stephane-klein/gibbon-pdf)
 
@@ -27,7 +31,7 @@ or if you want to contribute see this READMEs:
 - [x] Integrate [`mjmlio/mjml`](https://github.com/mjmlio/mjml)
 - [x] Send mails with [nodemailer](https://nodemailer.com)
 - [x] Add [mailhog](https://github.com/mailhog/MailHog) to test
-- [x] Docker Image (`harobed/poc-send-mails-with-template-and-jsonschema:latest`)
+- [x] Docker Image (`stephaneklein/gibbon-mail:latest`)
 - [x] curl example
 - [x] Screencast
 - [x] Swagger
