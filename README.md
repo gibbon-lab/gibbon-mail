@@ -33,11 +33,14 @@ or if you want to contribute see this READMEs:
 - [x] curl example
 - [x] Screencast
 - [x] Swagger
+- [ ] Multi language mail template support #8
 - [ ] Add [UISchema](https://react-jsonschema-form.readthedocs.io/en/latest/) support
 - [ ] Check json input with JSON Schema
 - [ ] Test frontend
 - [ ] Configure CI
 - [ ] Add option to save mail sent (in PostgreSQL)
+
+[See other issues...](https://github.com/stephane-klein/gibbon-mail/issues)
 
 
 ## Features
