@@ -1,6 +1,6 @@
 # Gibbon-mail
 
-![Docker Automated build](https://img.shields.io/docker/automated/stephaneklein/gibbon-mail)
+[![Docker Automated build](https://img.shields.io/docker/automated/stephaneklein/gibbon-mail)](https://hub.docker.com/r/stephaneklein/gibbon-mail)
 
 Send mails with mjml Template  and JSON Schema.
 
