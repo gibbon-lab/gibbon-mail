@@ -14,6 +14,14 @@ To generate PDF instead send mails, see this project: [poc-generate-pdf-with-htm
 - I would like to allow humans to send email manually, via a simple application plugged to the same API.
 - I would like to keep a history (optionally) of all mail sent
 
+## Quick start
+
+Go to [`docker-image/`](docker-image/) and read the README.
+
+or if you want to contribute see this READMEs:
+
+- [`backend/`](backend/)
+- [`frontend/`](frontend/)
 
 ## Roadmaps
 
