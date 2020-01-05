@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   app:
-    image: harobed/gibbon-mail:latest
+    image: stephaneklein/gibbon-mail:latest
     ports:
      - 5000:5000
     volumes:
