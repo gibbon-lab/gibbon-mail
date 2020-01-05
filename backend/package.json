@@ -24,21 +24,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@koa/cors": "2.2.3",
-    "koa": "2.7.0",
+    "@koa/cors": "3.0.0",
+    "koa": "2.11.0",
     "koa-bodyparser": "4.2.1",
     "koa-router": "7.4.0",
     "koa-static": "5.0.0",
-    "koa2-swagger-ui": "2.15.1",
-    "mjml": "4.4.1",
-    "nodemailer": "6.3.0",
+    "koa2-swagger-ui": "2.15.4",
+    "mjml": "4.5.1",
+    "nodemailer": "6.4.2",
     "nunjucks": "3.2.0"
   },
   "devDependencies": {
-    "nodemon": "1.19.1",
-    "eslint": "5.16.0",
-    "eslint-plugin-jest": "22.14.1",
-    "jest": "24.8.0",
+    "nodemon": "2.0.2",
+    "eslint": "6.8.0",
+    "eslint-plugin-jest": "23.3.0",
+    "jest": "24.9.0",
     "superagent-binary-parser": "1.0.1",
     "supertest": "4.0.2"
   }
