@@ -195,7 +195,7 @@ router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
     ctx.body = fs.createReadStream(attachmentFilePath);
 });
 
-module.exports = function createApp(port, templatePath, staticPath, smtpUrl, siteUrl) {
+module.exports = function createApp({port, templatePath, staticPath, smtpUrl, siteUrl}) {
     const app = new Koa();
     app.context.port = port;
     app.context.templatePath = templatePath;
