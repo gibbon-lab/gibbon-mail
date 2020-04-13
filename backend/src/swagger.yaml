@@ -130,3 +130,25 @@ paths:
             application/json:
               schema: 
                 type: object
+
+  /v1/templates/{name}/attachments/{filename}:
+    get:
+      summary: "Get template attachment files"
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Template name
+        - in: path
+          name: filename
+          schema:
+            type: string
+          required: true
+          description: Attachment filename
+      responses:
+        '200':
+          description: File content
+          content:
+            application/x-binary

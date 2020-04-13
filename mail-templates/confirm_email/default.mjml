@@ -2,11 +2,15 @@
   <mj-body>
     <mj-section background-color="white">
       <mj-column>
-        <mj-text>    
+        <mj-text>
           <p>Hi {{ username }}!</p>
 
           <p>Thanks for signing up for {{ application_name }}!</p>
+        </mj-text>
 
+        <mj-image width="100px" src="cid:gibbon.png" />
+
+        <mj-text>
           <p>Please confirm your email ({{ confirm_email|safe }}) by clicking the link below:</p>
         </mj-text>
 
@@ -17,7 +21,7 @@
             color="white"
             >Confirm</mj-button>
 
-        <mj-text>    
+        <mj-text>
           <p>This link will expire in 48 hours.</p>
 
 {% if is_new_user %}

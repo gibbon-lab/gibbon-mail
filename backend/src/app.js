@@ -87,6 +87,10 @@ function getHtml(templatePath, values) {
     );
 }
 
+function replaceAllCIDByPreviewUrl(data, ctx) {
+    return data.replace(/(['|"])cid:(.*)(['|"])/gi, `$1${ctx.siteUrl}/v1/templates/${ctx.params.name}/attachments/$2$3`);
+}
+
 function getTxt(templatePath, values) {
     return nunjucks.renderString(
         fs.readFileSync(
@@ -119,7 +123,10 @@ router.post('/v1/templates/:name/preview', (ctx) => {
     ctx.type = 'application/json';
     ctx.body = {
         'subject': getSubject(subjectTemplatePath, ctx.request.body),
-        'html': getHtml(mjmlTemplatePath, ctx.request.body),
+        'html': replaceAllCIDByPreviewUrl(
+            getHtml(mjmlTemplatePath, ctx.request.body),
+            ctx
+        ),
         'txt': getTxt(txtTemplatePath, ctx.request.body)
     };
 });
@@ -146,15 +153,53 @@ router.post('/v1/templates/:name/send', async (ctx) => {
         to: ctx.request.body.to,
         subject: getSubject(subjectTemplatePath, ctx.request.body),
         html: getHtml(mjmlTemplatePath, ctx.request.body),
-        text: getTxt(txtTemplatePath, ctx.request.body)
+        text: getTxt(txtTemplatePath, ctx.request.body),
+        attachments: fs.readdirSync(
+            path.join(
+                ctx.templatePath,
+                ctx.params.name,
+                'attachments'
+            )
+        ).map((filename) => {
+            return {
+                filename: filename,
+                path: path.join(
+                    ctx.templatePath,
+                    ctx.params.name,
+                    'attachments',
+                    filename
+                ),
+                cid: filename,
+                encoding: 'base64'
+            };
+        })
     });
     ctx.body = { result: result };
 });
 
-module.exports = function createApp(port, templatePath, staticPath, smtpUrl) {
+router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
+    console.log('attachments');
+    const attachmentFilePath = path.join(
+        ctx.templatePath,
+        ctx.params.name,
+        'attachments',
+        ctx.params.filename
+    );
+    if (!fs.existsSync(attachmentFilePath)) {
+        ctx.status = 404;
+        ctx.body = `${ctx.params.name}/attachments/${ctx.params.filename} file not exists`;
+        return;
+    }
+
+    ctx.attachment(ctx.params.filename);
+    ctx.body = fs.createReadStream(attachmentFilePath);
+});
+
+module.exports = function createApp(port, templatePath, staticPath, smtpUrl, siteUrl) {
     const app = new Koa();
     app.context.port = port;
     app.context.templatePath = templatePath;
+    app.context.siteUrl = siteUrl;
 
     if (smtpUrl === undefined) {
         app.context.transporter = nodemailer.createTransport({
