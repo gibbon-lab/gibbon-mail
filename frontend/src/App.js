@@ -106,7 +106,7 @@ function RessourceForm({ match }) {
             };
             sendMail(match.params.id);
         },
-        []
+        [match.params.id]
     );
 
     if (jsonSchema === null) return <p>Loading</p>;
