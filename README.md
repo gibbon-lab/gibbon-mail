@@ -1,7 +1,5 @@
 # Gibbon-mail
 
-[![Docker Automated build](https://img.shields.io/docker/automated/stephaneklein/gibbon-mail)](https://hub.docker.com/r/stephaneklein/gibbon-mail)
-
 Send mails with mjml Template  and JSON Schema.
 
 - Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
@@ -59,6 +57,9 @@ or if you want to contribute see this READMEs:
 - Optionnaly record all email sent
 - [cid](https://nodemailer.com/message/embedded-images/) image attachment support
 
+## Docker Image
+
+[`stephaneklein/gibbon-mail:latest`](https://hub.docker.com/r/stephaneklein/gibbon-mail/builds) Docker Image is automatically builded when [`master` branch](https://github.com/stephane-klein/gibbon-mail/tree/master/) is updated.
 
 ## This project is based on this stack
 
