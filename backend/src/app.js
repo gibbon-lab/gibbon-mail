@@ -148,31 +148,41 @@ router.post('/v1/templates/:name/send', async (ctx) => {
         }
     }
 
+    let attachments = [];
+    try {
+        const attachmentsFiles = fs.readdirSync(
+            path.join(
+                ctx.templatePath,
+                ctx.params.name,
+                'attachments'
+            )
+        );
+        if (Array.isArray(attachmentsFiles)) {
+            attachments = attachmentsFiles.map((filename) => {
+                return {
+                    filename: filename,
+                    path: path.join(
+                        ctx.templatePath,
+                        ctx.params.name,
+                        'attachments',
+                        filename
+                    ),
+                    cid: filename,
+                    encoding: 'base64'
+                };
+            });
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
     const result = await ctx.transporter.sendMail({
         from: ctx.request.body.from,
         to: ctx.request.body.to,
         subject: getSubject(subjectTemplatePath, ctx.request.body),
         html: getHtml(mjmlTemplatePath, ctx.request.body),
         text: getTxt(txtTemplatePath, ctx.request.body),
-        attachments: fs.readdirSync(
-            path.join(
-                ctx.templatePath,
-                ctx.params.name,
-                'attachments'
-            )
-        ).map((filename) => {
-            return {
-                filename: filename,
-                path: path.join(
-                    ctx.templatePath,
-                    ctx.params.name,
-                    'attachments',
-                    filename
-                ),
-                cid: filename,
-                encoding: 'base64'
-            };
-        })
+        attachments: attachments
     });
     ctx.body = { result: result };
 });
