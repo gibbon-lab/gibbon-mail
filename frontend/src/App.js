@@ -10,6 +10,7 @@ import {
     Panel
 } from 'react-bootstrap';
 
+import ReactMarkdown from 'react-markdown';
 import Form from 'react-jsonschema-form';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 
@@ -75,6 +76,7 @@ function Home() {
 }
 
 function RessourceForm({ match }) {
+    const [readme, setReadme] = useState(null);
     const [jsonSchema, setJsonSchema] = useState(null);
     const [fieldValues, setFieldValues] = useState({});
     const formEl = useRef(null);
@@ -83,6 +85,7 @@ function RessourceForm({ match }) {
         const fetchData = async () => {
             const result = await axios(`${apiURL}/v1/templates/${match.params.id}`);
             setJsonSchema(result.data.json_schema);
+            setReadme(result.data.readme); 
         };
 
         fetchData();
@@ -113,6 +116,16 @@ function RessourceForm({ match }) {
 
     return (
         <div>
+            {
+                readme && (
+                    <Panel>
+                        <Panel.Heading>README</Panel.Heading>
+                        <Panel.Body>
+                            <ReactMarkdown source={readme} />
+                        </Panel.Body>
+                    </Panel>
+                )
+            }
             <Panel>
                 <Panel.Heading>Form</Panel.Heading>
                 <Panel.Body>

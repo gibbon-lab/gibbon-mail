@@ -58,10 +58,27 @@ router.get('/v1/templates/:name', (ctx) => {
         ctx.body = e;
         return;
     }
+
+    let readme;
+    const readmeTemplatePath = path.join(ctx.templatePath, ctx.params.name, 'README.md');
+    if (fs.existsSync(readmeTemplatePath)) {
+        readme = getReadme(readmeTemplatePath);
+    }
+
     ctx.body = {
+        readme,
         json_schema: jsonSchema
     };
 });
+
+function getReadme(templatePath) {
+    return fs.readFileSync(
+        templatePath,
+        {
+            encoding: 'utf8'
+        }
+    );
+}
 
 function getSubject(templatePath, values) {
     return nunjucks.renderString(

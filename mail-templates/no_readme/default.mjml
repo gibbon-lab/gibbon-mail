@@ -1,0 +1,36 @@
+<mjml>
+  <mj-body>
+    <mj-section background-color="white">
+      <mj-column>
+        <mj-text>
+          <p>Hi {{ username }}!</p>
+
+          <p>Thanks for signing up for {{ application_name }}!</p>
+        </mj-text>
+
+        <mj-image width="100px" src="cid:gibbon.png" />
+
+        <mj-text>
+          <p>Please confirm your email ({{ confirm_email|safe }}) by clicking the link below:</p>
+        </mj-text>
+
+        <mj-button
+            font-family="Helvetica"
+            background-color="#f45e43"
+            href="{{ url|safe }}"
+            color="white"
+            >Confirm</mj-button>
+
+        <mj-text>
+          <p>This link will expire in 48 hours.</p>
+
+{% if is_new_user %}
+          <p>If you did not sign up, you may simply ignore this email.</p>
+{% else %}
+          <p>If you did not make this request, you may simply ignore this email.</p>
+{% endif %}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
