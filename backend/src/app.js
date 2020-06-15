@@ -154,6 +154,11 @@ router.post('/v1/templates/:name/send', async (ctx) => {
     const subjectTemplatePath = path.join(templatePath, 'default.subject');
     const mjmlTemplatePath = path.join(templatePath, 'default.mjml');
     const txtTemplatePath = path.join(templatePath, 'default.txt');
+    const attachmentsPath = path.join(
+        ctx.templatePath,
+        ctx.params.name,
+        'attachments'
+    );
 
     const templates = [subjectTemplatePath, mjmlTemplatePath, txtTemplatePath];
 
@@ -165,18 +170,12 @@ router.post('/v1/templates/:name/send', async (ctx) => {
         }
     }
 
-    let attachments = [];
-    try {
-        const attachmentsFiles = fs.readdirSync(
-            path.join(
-                ctx.templatePath,
-                ctx.params.name,
-                'attachments'
-            )
-        );
-        if (Array.isArray(attachmentsFiles)) {
-            attachments = attachmentsFiles.map((filename) => {
-                return {
+    const attachments = [];
+    if (fs.existsSync(attachmentsPath)) {
+        const attachmentsFiles = fs.readdirSync(attachmentsPath);
+        if (Array.isArray(attachmentsFiles) && attachmentsFiles.length > 0) {
+            attachmentsFiles.forEach((filename) => {
+                attachments.push({
                     filename: filename,
                     path: path.join(
                         ctx.templatePath,
@@ -186,11 +185,9 @@ router.post('/v1/templates/:name/send', async (ctx) => {
                     ),
                     cid: filename,
                     encoding: 'base64'
-                };
+                });
             });
         }
-    } catch (error) {
-        console.error(error);
     }
 
     const result = await ctx.transporter.sendMail({
