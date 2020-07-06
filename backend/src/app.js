@@ -202,7 +202,6 @@ router.post('/v1/templates/:name/send', async (ctx) => {
 });
 
 router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
-    console.log('attachments');
     const attachmentFilePath = path.join(
         ctx.templatePath,
         ctx.params.name,
