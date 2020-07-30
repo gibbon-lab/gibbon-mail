@@ -35,6 +35,15 @@ router.get('/v1/templates/', (ctx) => {
         .map((f) => f.name);
 });
 
+router.get('/v1/smtp/', (ctx) => {
+    ctx.body = {
+        'smtp1': ctx.config.get('smtp')
+    };
+    if (ctx.config.get('smtp2')) {
+        ctx.body['smtp2'] = ctx.config.get('smtp2');
+    }
+});
+
 router.get('/v1/templates/:name', (ctx) => {
     const schemaJsonPath = path.join(
         ctx.config.get('template_path'),
@@ -152,8 +161,12 @@ router.post('/v1/templates/:name/preview', (ctx) => {
     };
 });
 
-router.post('/v1/templates/:name/send', async (ctx) => {
+router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     const templatePath = path.join(ctx.config.get('template_path'), ctx.params.name);
+
+    if (ctx.params.stmpSelected === undefined) {
+        ctx.params.stmpSelected = 'smtp1';
+    }
 
     const subjectTemplatePath = path.join(templatePath, 'default.subject');
     const mjmlTemplatePath = path.join(templatePath, 'default.mjml');
@@ -194,7 +207,7 @@ router.post('/v1/templates/:name/send', async (ctx) => {
         }
     }
 
-    const result = await ctx.transporter.sendMail({
+    const result = await ctx.transporter[ctx.params.stmpSelected].sendMail({
         from: ctx.request.body.from,
         to: ctx.request.body.to,
         bcc: ctx.config.get('bcc'),
@@ -227,19 +240,32 @@ module.exports = function createApp(config) {
     const app = new Koa();
     app.context.config = config;
 
-    if (config.get('smtp_url') === undefined) {
-        app.context.transporter = nodemailer.createTransport({
+    app.context.transporter = {};
+    if (config.get('smtp.url') === undefined) {
+        app.context.transporter['smtp1'] = nodemailer.createTransport({
             streamTransport: true,
             newline: 'unix'
         });
     } else {
-        app.context.transporter = nodemailer.createTransport(config.get('smtp_url'));
-        app.context.transporter.verify(function (error) {
+        app.context.transporter['smtp1'] = nodemailer.createTransport(config.get('smtp.url'));
+        app.context.transporter['smtp1'].verify(function (error) {
             if (error) {
                 console.log(error);
                 process.exit(1);
             } else {
-                console.log('Server is ready to take our messages');
+                console.log('Smtp server is ready to take our messages');
+            }
+        });
+    }
+
+    if (config.get('smtp2.url') !== undefined) {
+        app.context.transporter['smtp2'] = nodemailer.createTransport(config.get('smtp2.url'));
+        app.context.transporter['smtp2'].verify(function (error) {
+            if (error) {
+                console.log(error);
+                process.exit(1);
+            } else {
+                console.log('Smtp server 2 is ready to take our messages');
             }
         });
     }

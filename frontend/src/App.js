@@ -7,7 +7,8 @@ import {
     Grid, Row, Col,
     Breadcrumb, BreadcrumbItem,
     ListGroup, ListGroupItem,
-    Panel
+    Panel,
+    SplitButton, MenuItem
 } from 'react-bootstrap';
 
 import ReactMarkdown from 'react-markdown';
@@ -78,14 +79,18 @@ function Home() {
 function RessourceForm({ match }) {
     const [readme, setReadme] = useState(null);
     const [jsonSchema, setJsonSchema] = useState(null);
+    const [smtpList, setSmtpList] = useState({});
+    const [smtpSelected, setSmtpSelected] = useState('smtp1');
     const [fieldValues, setFieldValues] = useState({});
     const formEl = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios(`${apiURL}/v1/templates/${match.params.id}`);
+            let result = await axios(`${apiURL}/v1/templates/${match.params.id}`);
             setJsonSchema(result.data.json_schema);
             setReadme(result.data.readme); 
+            result = await axios(`${apiURL}/v1/smtp/`);
+            setSmtpList(result.data);
         };
 
         fetchData();
@@ -103,14 +108,18 @@ function RessourceForm({ match }) {
             setFieldValues(formEl.current.state.formData);
             const sendMail = async () => {
                 await axios.post(
-                    `${apiURL}/v1/templates/${match.params.id}/send`,
+                    `${apiURL}/v1/templates/${match.params.id}/send/${smtpSelected}`,
                     formEl.current.state.formData
                 );
             };
             sendMail(match.params.id);
         },
-        [match.params.id]
+        [match.params.id, smtpSelected]
     );
+
+    const onSelectStmp = (eventKey) => {
+        setSmtpSelected(eventKey);
+    };
 
     if (jsonSchema === null) return <p>Loading</p>;
 
@@ -134,13 +143,36 @@ function RessourceForm({ match }) {
                         formData={fieldValues}
                         ref={formEl}
                     >
-                        <ButtonToolbar className='btn-toolbar pull-right'>
-                            <Button
-                                bsStyle='primary'
-                                onClick={submitPreview}>Preview</Button>
-                            <Button
-                                onClick={submitSendMail}>Send mail</Button>
-                        </ButtonToolbar>
+                        <div className='pull-right'>
+                            <ButtonToolbar className='btn-toolbar'>
+                                <Button
+                                    bsStyle='primary'
+                                    onClick={submitPreview}>Preview</Button>
+                                {
+                                    (Object.keys(smtpList).length < 2) 
+                                        ? (
+                                            <Button
+                                                onClick={submitSendMail}
+                                            >Send mail</Button>
+                                        ) : (
+                                            <SplitButton
+                                                title={smtpList[smtpSelected].label}
+                                                onClick={submitSendMail}
+                                                className='dropdown-menu-right'
+                                                id='smtp-button'
+                                            >
+                                                {Object.entries(smtpList).map(([key, {label}], i) => (
+                                                    <MenuItem
+                                                        key={i}
+                                                        eventKey={key}
+                                                        onSelect={onSelectStmp}
+                                                    >{label}</MenuItem>
+                                                ))}
+                                            </SplitButton>
+                                        )
+                                }
+                            </ButtonToolbar>
+                        </div>
                     </Form>
                 </Panel.Body>
             </Panel>

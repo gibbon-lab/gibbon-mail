@@ -5,6 +5,15 @@ info:
   contact:
     email: "contact@stephane-klein.info"
 paths:
+  /v1/smtp/:
+    get:
+      summary: "Get smtp config"
+      responses:
+        '200':
+          description: Smtp list
+          content:
+            application/json:
+
   /v1/templates:
     get:
       summary: "Get template name list"

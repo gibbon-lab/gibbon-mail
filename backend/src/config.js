@@ -19,11 +19,33 @@ const config = Convict({
         default: undefined,
         env: 'STATIC_PATH'
     },
-    smtp_url: {
-        doc: 'Stmp server url used to send emails (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
-        format: String,
-        default: undefined,
-        env: 'SMTP_URL'
+    smtp: {
+        url: {
+            doc: 'Stmp server url used to send emails (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP_URL'
+        },
+        label: {
+            doc: 'Stmp server label (for instance Mailchimp SMTP server)',
+            format: String,
+            default: 'Default SMTP',
+            env: 'SMTP_LABEL'
+        }
+    },
+    smtp2: {
+        url: {
+            doc: 'Second stmp server url used to send emails (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP2_URL'
+        },
+        label: {
+            doc: 'Second stmp server label (for instance Mailchimp SMTP server)',
+            format: String,
+            default: 'Second SMTP',
+            env: 'SMTP2_LABEL'
+        }
     },
     site_url: {
         doc: 'The url where is exposed gibbon-mail backend',

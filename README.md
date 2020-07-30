@@ -108,6 +108,30 @@ services:
       BCC: log@example.com
 ```
 
+### Why can I configure two smtp service?
+
+Gibbon-mail support two smtp server configuration, for instance:
+
+```
+# docker-compose.yml
+version: "3.7"
+services:
+  gibbon-mail:
+    image: stephaneklein/gibbon-mail:latest
+    ports:
+     - 5000:5000
+    volumes:
+     - ../mail-templates/:/templates/
+    environment:
+      SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
+      SMTP_LABEL: "Send mail to Mailhog"
+      SMTP2_URL: smtp://user:password@example.com:25/?pool=true
+      SMTP2_LABEL: "Send mail with example.com smtp server"
+      BCC: log@example.com
+```
+
+You can use `SMTP2_URL` for instance on staging environment: by default, you send mail to Mailhog fake smtp server et optionnaly on real smtp server to test your mail template rendering on several email clients. 
+
 ---
 
 Emails examples:
