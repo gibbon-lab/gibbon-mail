@@ -29,7 +29,7 @@ router.get('/v1/swagger.yaml', (ctx) => {
 
 router.get('/v1/templates/', (ctx) => {
     ctx.body = fs.readdirSync(
-        ctx.templatePath, { withFileTypes: true }
+        ctx.config.get('template_path'), { withFileTypes: true }
     )
         .filter(((f) => !f.isFile()))
         .map((f) => f.name);
@@ -37,7 +37,7 @@ router.get('/v1/templates/', (ctx) => {
 
 router.get('/v1/templates/:name', (ctx) => {
     const schemaJsonPath = path.join(
-        ctx.templatePath,
+        ctx.config.get('template_path'),
         ctx.params.name,
         'schema.json'
     );
@@ -64,7 +64,7 @@ router.get('/v1/templates/:name', (ctx) => {
     }
 
     let readme;
-    const readmeTemplatePath = path.join(ctx.templatePath, ctx.params.name, 'README.md');
+    const readmeTemplatePath = path.join(ctx.config.get('template_path'), ctx.params.name, 'README.md');
     if (fs.existsSync(readmeTemplatePath)) {
         readme = getReadme(readmeTemplatePath);
     }
@@ -109,7 +109,7 @@ function getHtml(templatePath, values) {
 }
 
 function replaceAllCIDByPreviewUrl(data, ctx) {
-    return data.replace(/(['|"])cid:(.*)(['|"])/gi, `$1${ctx.siteUrl}/v1/templates/${ctx.params.name}/attachments/$2$3`);
+    return data.replace(/(['|"])cid:(.*)(['|"])/gi, `$1${ctx.config.get('site_url')}/v1/templates/${ctx.params.name}/attachments/$2$3`);
 }
 
 function getTxt(templatePath, values) {
@@ -125,7 +125,7 @@ function getTxt(templatePath, values) {
 }
 
 router.post('/v1/templates/:name/preview', (ctx) => {
-    const templatePath = path.join(ctx.templatePath, ctx.params.name);
+    const templatePath = path.join(ctx.config.get('template_path'), ctx.params.name);
 
     const subjectTemplatePath = path.join(templatePath, 'default.subject');
     const mjmlTemplatePath = path.join(templatePath, 'default.mjml');
@@ -153,13 +153,13 @@ router.post('/v1/templates/:name/preview', (ctx) => {
 });
 
 router.post('/v1/templates/:name/send', async (ctx) => {
-    const templatePath = path.join(ctx.templatePath, ctx.params.name);
+    const templatePath = path.join(ctx.config.get('template_path'), ctx.params.name);
 
     const subjectTemplatePath = path.join(templatePath, 'default.subject');
     const mjmlTemplatePath = path.join(templatePath, 'default.mjml');
     const txtTemplatePath = path.join(templatePath, 'default.txt');
     const attachmentsPath = path.join(
-        ctx.templatePath,
+        ctx.config.get('template_path'),
         ctx.params.name,
         'attachments'
     );
@@ -182,7 +182,7 @@ router.post('/v1/templates/:name/send', async (ctx) => {
                 attachments.push({
                     filename: filename,
                     path: path.join(
-                        ctx.templatePath,
+                        ctx.config.get('template_path'),
                         ctx.params.name,
                         'attachments',
                         filename
@@ -207,7 +207,7 @@ router.post('/v1/templates/:name/send', async (ctx) => {
 
 router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
     const attachmentFilePath = path.join(
-        ctx.templatePath,
+        ctx.config.get('template_path'),
         ctx.params.name,
         'attachments',
         ctx.params.filename
@@ -224,9 +224,7 @@ router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
 
 module.exports = function createApp(config) {
     const app = new Koa();
-    app.context.port = config.get('port');
-    app.context.templatePath = config.get('template_path');
-    app.context.siteUrl = config.get('site_url');
+    app.context.config = config;
 
     if (config.get('smtp_url') === undefined) {
         app.context.transporter = nodemailer.createTransport({
