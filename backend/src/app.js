@@ -222,19 +222,19 @@ router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
     ctx.body = fs.createReadStream(attachmentFilePath);
 });
 
-module.exports = function createApp(port, templatePath, staticPath, smtpUrl, siteUrl) {
+module.exports = function createApp(config) {
     const app = new Koa();
-    app.context.port = port;
-    app.context.templatePath = templatePath;
-    app.context.siteUrl = siteUrl;
+    app.context.port = config.get('port');
+    app.context.templatePath = config.get('template_path');
+    app.context.siteUrl = config.get('site_url');
 
-    if (smtpUrl === undefined) {
+    if (config.get('smtp_url') === undefined) {
         app.context.transporter = nodemailer.createTransport({
             streamTransport: true,
             newline: 'unix'
         });
     } else {
-        app.context.transporter = nodemailer.createTransport(smtpUrl);
+        app.context.transporter = nodemailer.createTransport(config.get('smtp_url'));
         app.context.transporter.verify(function (error) {
             if (error) {
                 console.log(error);
@@ -258,11 +258,11 @@ module.exports = function createApp(port, templatePath, staticPath, smtpUrl, sit
         })
     );
 
-    if (staticPath) {
-        app.use(koaStatic(staticPath));
+    if (config.get('static_path')) {
+        app.use(koaStatic(config.get('static_path')));
         app.use(async (ctx, next) => {
             ctx.type = 'html';
-            ctx.body = await readFile(`${staticPath}/index.html`);
+            ctx.body = await readFile(`${config.get('static_path')}/index.html`);
             await next();
         });
     }
