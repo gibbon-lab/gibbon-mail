@@ -28,7 +28,11 @@ router.get('/v1/swagger.yaml', (ctx) => {
 });
 
 router.get('/v1/templates/', (ctx) => {
-    ctx.body = fs.readdirSync(ctx.templatePath);
+    ctx.body = fs.readdirSync(
+        ctx.templatePath, { withFileTypes: true }
+    )
+        .filter(((f) => !f.isFile()))
+        .map((f) => f.name);
 });
 
 router.get('/v1/templates/:name', (ctx) => {
