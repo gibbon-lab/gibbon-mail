@@ -197,6 +197,7 @@ router.post('/v1/templates/:name/send', async (ctx) => {
     const result = await ctx.transporter.sendMail({
         from: ctx.request.body.from,
         to: ctx.request.body.to,
+        bcc: ctx.config.get('bcc'),
         subject: getSubject(subjectTemplatePath, ctx.request.body),
         html: getHtml(mjmlTemplatePath, ctx.request.body),
         text: getTxt(txtTemplatePath, ctx.request.body),
