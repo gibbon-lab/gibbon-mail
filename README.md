@@ -89,6 +89,24 @@ you must protect it by a private network or [Basic access authentication](https:
 
 [Gibbon](https://en.wikipedia.org/wiki/Gibbon) as an allusion to [Mandrill App](https://mandrill.com/).
 
+### How can I keep an archive of all mails send by Gibbon-mail?
+
+Configure `BCC` variable env as below example to send all mails send by Gibbon-mail to `log@example.com` email account.
+
+```
+# docker-compose.yml
+version: "3.7"
+services:
+  gibbon-mail:
+    image: stephaneklein/gibbon-mail:latest
+    ports:
+     - 5000:5000
+    volumes:
+     - ../mail-templates/:/templates/
+    environment:
+      SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
+      BCC: log@example.com
+```
 
 ---
 
