@@ -39,7 +39,7 @@ router.get('/v1/smtp/', (ctx) => {
     ctx.body = {
         'smtp1': ctx.config.get('smtp')
     };
-    if (ctx.config.get('smtp2')) {
+    if (ctx.config.get('smtp2.url')) {
         ctx.body['smtp2'] = ctx.config.get('smtp2');
     }
 });
