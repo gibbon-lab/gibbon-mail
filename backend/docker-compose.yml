@@ -1,13 +1,13 @@
 version: '3.7'
 services:
-  mailhog:
-    image: mailhog/mailhog:latest
+  mailcatcher:
+    image: schickling/mailcatcher:latest
     ports:
       - "1025:1025"
-      - "8025:8025"
+      - "8025:1080"
 
-  mailhog2:
-    image: mailhog/mailhog:latest
+  mailcatcher2:
+    image: schickling/mailcatcher:latest
     ports:
       - "1026:1025"
-      - "8026:8025"
+      - "8026:1080"
