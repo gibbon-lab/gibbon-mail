@@ -7,10 +7,10 @@ services:
     volumes:
      - ../mail-templates/:/templates/
     environment:
-      SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
+      SMTP_URL: smtp://user:password@mailcatcher:1025/?pool=true
 
-  mailhog:
-    image: mailhog/mailhog:latest
+  mailcatcher:
+    image: schickling/mailcatcher:latest
     ports:
       - "1025:1025"
-      - "8025:8025"
+      - "8025:1080"
