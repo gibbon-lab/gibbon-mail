@@ -210,7 +210,11 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     const result = await ctx.transporter[ctx.params.stmpSelected].sendMail({
         from: ctx.request.body.from,
         to: ctx.request.body.to,
-        bcc: ctx.config.get('bcc'),
+        bcc: Array.isArray(ctx.request.body.bcc)
+            ? ctx.config.get('bcc').concat(ctx.request.body.bcc)
+            : typeof ctx.request.body.bcc === 'string'
+                ? [...ctx.config.get('bcc'), ctx.request.body.bcc]
+                : ctx.config.get('bcc'),
         subject: getSubject(subjectTemplatePath, ctx.request.body),
         html: getHtml(mjmlTemplatePath, ctx.request.body),
         text: getTxt(txtTemplatePath, ctx.request.body),

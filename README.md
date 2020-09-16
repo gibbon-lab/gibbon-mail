@@ -105,8 +105,10 @@ services:
      - ../mail-templates/:/templates/
     environment:
       SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
-      BCC: log@example.com
+      BCC: log@example.com,test1@example.com
 ```
+
+Or you can pass it to the body of the request as `bcc`.
 
 ### Why can I configure two smtp service?
 

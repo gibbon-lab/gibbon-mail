@@ -55,8 +55,8 @@ const config = Convict({
     },
     bcc: {
         doc: 'Email address to add in bcc field (Blind carbon copy) to all mail sends',
-        format: String,
-        default: undefined,
+        format: Array,
+        default: [],
         env: 'BCC'
     }
 });
