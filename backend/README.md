@@ -1,9 +1,9 @@
 ```
-$ npm install
+$ yarn install
 ```
 
 ```
-$ npm run test
+$ yarn run test
 ```
 
 You can start [mailhog](https://github.com/mailhog/MailHog):
@@ -23,7 +23,7 @@ $ export SMTP_URL="smtp://user:password@127.0.0.1:1025/?pool=true"
 [**url encoded**](https://www.w3schools.com/tags/ref_urlencode.asp).
 
 ```
-$ npm run watch
+$ yarn run watch
 ```
 
 

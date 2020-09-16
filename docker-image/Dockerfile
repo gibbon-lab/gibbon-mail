@@ -5,8 +5,8 @@ RUN mkdir -p /src/
 COPY frontend/ /src/frontend/
 WORKDIR /src/frontend/
 
-RUN npm install
-RUN npm run build
+RUN yarn install
+RUN yarn run build
 
 FROM node:11.14.0-alpine
 
@@ -15,9 +15,9 @@ WORKDIR /src/
 
 COPY --from=0 /src/frontend/build/ /src/frontend/build/
 COPY backend/package.json /src/
-COPY backend/package-lock.json /src/
+COPY backend/yarn.lock /src/
 
-RUN npm install
+RUN yarn install
 
 COPY backend/src/ /src/src/
 
@@ -27,4 +27,4 @@ EXPOSE 5000
 ENV TEMPLATES_PATH=/templates/
 ENV STATIC_PATH=/src/frontend/build/
 
-CMD npm run start
+CMD yarn run start
