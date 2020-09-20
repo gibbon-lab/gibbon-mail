@@ -259,7 +259,8 @@ module.exports = function createApp(config) {
         app.context.transporter['smtp1'] = nodemailer.createTransport(getSmtpUrl(config));
         app.context.transporter['smtp1'].verify(function (error) {
             if (error) {
-                console.log(error);
+                console.error(error);
+                console.error('Smtp url:', getSmtpUrl(config))
                 process.exit(1);
             } else {
                 console.log('Smtp server is ready to take our messages');
@@ -271,7 +272,8 @@ module.exports = function createApp(config) {
         app.context.transporter['smtp2'] = nodemailer.createTransport(getSmtp2Url(config));
         app.context.transporter['smtp2'].verify(function (error) {
             if (error) {
-                console.log(error);
+                console.error(error);
+                console.error('Smtp2 url:', getSmtp2Url(config))
                 process.exit(1);
             } else {
                 console.log('Smtp server 2 is ready to take our messages');
