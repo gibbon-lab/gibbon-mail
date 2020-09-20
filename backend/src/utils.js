@@ -5,7 +5,7 @@ const getSmtpUrl = (config) => {
         config.get('smtp.host') &&
         config.get('smtp.port')
     ) {
-        return `smtp://${encodeURI(config.get('smtp.username'))}:${encodeURI(config.get('smtp.password'))}@${encodeURI(config.get('smtp.host'))}:${config.get('smtp.port')}/${config.get('smtp.options')}`;
+        return `smtp://${encodeURIComponent(config.get('smtp.username'))}:${encodeURIComponent(config.get('smtp.password'))}@${config.get('smtp.host')}:${config.get('smtp.port')}/${config.get('smtp.options')}`;
     }
 };
 
@@ -16,7 +16,7 @@ const getSmtp2Url = (config) => {
         config.get('smtp2.host') &&
         config.get('smtp2.port')
     ) {
-        return `smtp://${encodeURI(config.get('smtp2.username'))}:${encodeURI(config.get('smtp2.password'))}@${encodeURI(config.get('smtp2.host'))}:${config.get('smtp2.port')}/${config.get('smtp2.options')}`;
+        return `smtp://${encodeURIComponent(config.get('smtp2.username'))}:${encodeURIComponent(config.get('smtp2.password'))}@${config.get('smtp2.host')}:${config.get('smtp2.port')}/${config.get('smtp2.options')}`;
     }
 };
 
