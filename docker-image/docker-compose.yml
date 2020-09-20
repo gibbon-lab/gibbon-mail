@@ -7,10 +7,25 @@ services:
     volumes:
      - ../mail-templates/:/templates/
     environment:
-      SMTP_URL: smtp://user:password@mailcatcher:1025/?pool=true
+      SMTP_LABEL: 'Mailcatcher 1'
+      SMTP_USERNAME: user
+      SMTP_PASSWORD: password
+      SMTP_HOST: mailcatcher
+      SMTP_PORT: 1025
+      SMTP2_LABEL: 'Mailcatcher 2'
+      SMTP2_USERNAME: user
+      SMTP2_PASSWORD: password
+      SMTP2_HOST: mailcatcher2
+      SMTP2_PORT: 1025
 
   mailcatcher:
     image: schickling/mailcatcher:latest
     ports:
       - "1025:1025"
       - "8025:1080"
+
+  mailcatcher2:
+    image: schickling/mailcatcher:latest
+    ports:
+      - "1026:1025"
+      - "8026:1080"

@@ -20,11 +20,35 @@ const config = Convict({
         env: 'STATIC_PATH'
     },
     smtp: {
-        url: {
-            doc: 'Stmp server url used to send emails (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+        username: {
+            doc: 'Stmp username used for authentification (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
             format: String,
             default: undefined,
-            env: 'SMTP_URL'
+            env: 'SMTP_USERNAME'
+        },
+        password: {
+            doc: 'Stmp password used for authentification (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP_PASSWORD'
+        },
+        host: {
+            doc: 'Stmp host of the server (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP_HOST'
+        },
+        port: {
+            doc: 'Smtp port of the server (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP_PORT'
+        },
+        options: {
+            doc: 'Stmp options (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP_OPTIONS'
         },
         label: {
             doc: 'Stmp server label (for instance Mailchimp SMTP server)',
@@ -34,11 +58,35 @@ const config = Convict({
         }
     },
     smtp2: {
-        url: {
-            doc: 'Second stmp server url used to send emails (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+        username: {
+            doc: 'Stmp username used for authentification (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
             format: String,
             default: undefined,
-            env: 'SMTP2_URL'
+            env: 'SMTP2_USERNAME'
+        },
+        password: {
+            doc: 'Stmp password used for authentification (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP2_PASSWORD'
+        },
+        host: {
+            doc: 'Stmp host of the server (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP2_HOST'
+        },
+        port: {
+            doc: 'Smtp port of the server (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: undefined,
+            env: 'SMTP2_PORT'
+        },
+        options: {
+            doc: 'Stmp options (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
+            format: String,
+            default: '?pool=true',
+            env: 'SMTP2_OPTIONS'
         },
         label: {
             doc: 'Second stmp server label (for instance Mailchimp SMTP server)',

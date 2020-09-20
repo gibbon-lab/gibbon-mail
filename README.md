@@ -104,7 +104,10 @@ services:
     volumes:
      - ../mail-templates/:/templates/
     environment:
-      SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
+      SMTP_USERNAME: user
+      SMTP_PASSWORD: password
+      SMTP_HOST: mailcatcher
+      SMTP_PORT: 1025
       BCC: log@example.com,test1@example.com
 ```
 
@@ -125,9 +128,15 @@ services:
     volumes:
      - ../mail-templates/:/templates/
     environment:
-      SMTP_URL: smtp://user:password@mailhog:1025/?pool=true
-      SMTP_LABEL: "Send mail to Mailhog"
-      SMTP2_URL: smtp://user:password@example.com:25/?pool=true
+      SMTP_USERNAME: user
+      SMTP_PASSWORD: password
+      SMTP_HOST: mailcatcher
+      SMTP_PORT: 1025
+      SMTP_LABEL: "Send mail to Mailcatcher"
+      SMTP2_USERNAME: user
+      SMTP2_PASSWORD: password
+      SMTP2_HOST: example.com
+      SMTP2_PORT: 25
       SMTP2_LABEL: "Send mail with example.com smtp server"
       BCC: log@example.com
 ```

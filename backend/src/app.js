@@ -16,6 +16,11 @@ const nodemailer = require('nodemailer');
 const readFile = promisify(fs.readFile);
 const router = new Router();
 
+const {
+    getSmtpUrl,
+    getSmtp2Url
+} = require('./utils');
+
 router.get('/v1/', (ctx) => {
     ctx.body = {
         version: '0.1.0'
@@ -39,7 +44,7 @@ router.get('/v1/smtp/', (ctx) => {
     ctx.body = {
         'smtp1': ctx.config.get('smtp')
     };
-    if (ctx.config.get('smtp2.url')) {
+    if (getSmtp2Url(ctx.config)) {
         ctx.body['smtp2'] = ctx.config.get('smtp2');
     }
 });
@@ -245,13 +250,13 @@ module.exports = function createApp(config) {
     app.context.config = config;
 
     app.context.transporter = {};
-    if (config.get('smtp.url') === undefined) {
+    if (getSmtpUrl(config) === undefined) {
         app.context.transporter['smtp1'] = nodemailer.createTransport({
             streamTransport: true,
             newline: 'unix'
         });
     } else {
-        app.context.transporter['smtp1'] = nodemailer.createTransport(config.get('smtp.url'));
+        app.context.transporter['smtp1'] = nodemailer.createTransport(getSmtpUrl(config));
         app.context.transporter['smtp1'].verify(function (error) {
             if (error) {
                 console.log(error);
@@ -262,8 +267,8 @@ module.exports = function createApp(config) {
         });
     }
 
-    if (config.get('smtp2.url') !== undefined) {
-        app.context.transporter['smtp2'] = nodemailer.createTransport(config.get('smtp2.url'));
+    if (getSmtp2Url(config) !== undefined) {
+        app.context.transporter['smtp2'] = nodemailer.createTransport(getSmtp2Url(config));
         app.context.transporter['smtp2'].verify(function (error) {
             if (error) {
                 console.log(error);
