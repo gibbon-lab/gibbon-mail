@@ -89,6 +89,7 @@ paths:
                 to: "john.doe@example.com"
                 username: "john-doe"
                 is_new_user: "true"
+                lang: "en"
       responses:
         '200':
           description: Preview fields
@@ -133,6 +134,7 @@ paths:
                 to: "john.doe@example.com"
                 username: "john-doe"
                 is_new_user: "true"
+                lang: "en"
       responses:
         '200':
           content:

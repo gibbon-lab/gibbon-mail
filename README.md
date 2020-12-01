@@ -85,6 +85,34 @@ or if you want to contribute see this READMEs:
 This project hasn't build-in authentication system, it's a internal service in your stack,
 you must protect it by a private network or [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) system.
 
+### How does the multi-language support works?
+
+Inside your mail templates folders, you can create multiple languages files for the same email, in the following format: `{lang}.(mjml|subject|txt)`.
+
+You also need to let a default file in case the language is not found or no language is requested.
+
+So, for example, your folder should look something like this:
+
+```
+$ ls mail-templates/mail-example
+default.mjml       default.subject             fr.txt            de.mjml           de.subject          es.txt
+default.txt        fr.mjml                     fr.subject        de.txt            es.mjml             es.subject
+```
+
+Then, you can add the `lang` property to the body of your request, which will send the email with the requested language if it exists.
+
+For example, the following body will try to send a german email:
+
+```
+{
+  "from": "no-reply@example.com",
+  "to": "john.doe@example.com",
+  "lang": "de"
+}
+```
+
+If the `lang` property is not present in the body of your request, the default email will be sent.
+
 ### Why « Gibbon-mail » name?
 
 [Gibbon](https://en.wikipedia.org/wiki/Gibbon) as an allusion to [Mandrill App](https://mandrill.com/).
