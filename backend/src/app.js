@@ -111,15 +111,17 @@ function getSubject(templatePath, values) {
 }
 
 function getHtml(templatePath, values) {
-    return nunjucks.renderString(
-        mjml2html(fs.readFileSync(
-            templatePath,
-            {
-                encoding: 'utf8'
-            }
-        )).html,
-        values
-    );
+    return mjml2html(
+        nunjucks.renderString(
+            fs.readFileSync(
+                templatePath,
+                {
+                    encoding: 'utf8'
+                }
+            ),
+            values
+        )
+    ).html;
 }
 
 function replaceAllCIDByPreviewUrl(data, ctx) {

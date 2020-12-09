@@ -23,13 +23,17 @@
 
         <mj-text>
           <p>This link will expire in 48 hours.</p>
+        </mj-text>
 
 {% if is_new_user %}
+        <mj-text>
           <p>If you did not sign up, you may simply ignore this email.</p>
-{% else %}
-          <p>If you did not make this request, you may simply ignore this email.</p>
-{% endif %}
         </mj-text>
+{% else %}
+        <mj-text>
+          <p>If you did not make this request, you may simply ignore this email.</p>
+        </mj-text>
+{% endif %}
       </mj-column>
     </mj-section>
   </mj-body>
