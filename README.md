@@ -87,21 +87,26 @@ you must protect it by a private network or [Basic access authentication](https:
 
 ### How does the multi-language support works?
 
-Inside your mail templates folders, you can create multiple languages files for the same email, in the following format: `{lang}.(mjml|subject|txt)`.
+#### Language files
 
-You also need to let a default file in case the language is not found or no language is requested.
+Inside your mail templates folders, you can create multiple languages files for each email, in the following format: `/mail-templates/email-folder/{lang}.(mjml|subject|txt)`.
 
-So, for example, your folder should look something like this:
+For example, an email that supports French and English, and defaults to english, will have the following files in its template folder:
 
+```sh
+$ ls mail-templates/email-example
+default.mjml -> en.mjml                 fr.mjml              en.mjml
+default.subject -> en.subject           fr.subject           en.subject
+default.txt -> en.mjml                  fr.txt               en.txt
 ```
-$ ls mail-templates/mail-example
-default.mjml       default.subject             fr.txt            de.mjml           de.subject          es.txt
-default.txt        fr.mjml                     fr.subject        de.txt            es.mjml             es.subject
-```
 
-Then, you can add the `lang` property to the body of your request, which will send the email with the requested language if it exists.
+Note: default files are actually symbolic links
 
-For example, the following body will try to send a german email:
+#### Telling Gibbon which language to use
+
+When using Gibbon to send an email, if the `lang` property is present in the body of the request, Gibbon will use the corresponding language files accordingly. If the language files are not found, Gibbon will use the default files
+
+For example, the following request body will try to send a german email, or fallback to the default email if there are no german files in the template folder:
 
 ```
 {
@@ -111,7 +116,21 @@ For example, the following body will try to send a german email:
 }
 ```
 
-If the `lang` property is not present in the body of your request, the default email will be sent.
+#### Examples
+
+- Adding a french-only email
+  - create `/email-folder/FR.{txt,mjml,subject}` files
+  - run the following command to use French as the default language: `ln -s FR.subject default.subject ; ln -s FR.txt default.txt ; ln -s FR.mjml default.mjml`
+
+- Create an english version
+  - create `/email-folder/EN.{txt,mjml,subject}` files
+
+- Switch the default version from French to English
+  - `rm -f default.*`
+  - `ln -s EN.subject default.subject ; ln -s EN.txt default.txt ; ln -s EN.mjml default.mjml`
+
+If the `lang` property is missing from the body of the request, Gibbon will fallback to the default version, and use the default files.
+
 
 ### Why « Gibbon-mail » name?
 
@@ -169,7 +188,7 @@ services:
       BCC: log@example.com
 ```
 
-You can use `SMTP2_URL` for instance on staging environment: by default, you send mail to Mailhog fake smtp server et optionnaly on real smtp server to test your mail template rendering on several email clients. 
+You can use `SMTP2_URL` for instance on staging environment: by default, you send mail to Mailhog fake smtp server et optionnaly on real smtp server to test your mail template rendering on several email clients.
 
 ---
 
