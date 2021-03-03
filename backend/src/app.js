@@ -20,6 +20,18 @@ const {
     getSmtpUrl,
     getSmtp2Url
 } = require('./utils');
+const filters = require('../filters');
+
+const nunjucksEnv = new nunjucks.Environment();
+
+Object.keys(filters).forEach((filterName) => {
+    try {
+        nunjucksEnv.addFilter(filterName, filters[filterName]);
+        console.log(`Successfully loaded filter: ${filterName}`);
+    } catch (error) {
+        console.error(`Failed to load filter: ${filterName}`, error);
+    }
+});
 
 router.get('/v1/', (ctx) => {
     ctx.body = {
@@ -99,7 +111,7 @@ function getReadme(templatePath) {
 }
 
 function getSubject(templatePath, values) {
-    return nunjucks.renderString(
+    return nunjucksEnv.renderString(
         fs.readFileSync(
             templatePath,
             {
@@ -112,7 +124,7 @@ function getSubject(templatePath, values) {
 
 function getHtml(templatePath, values) {
     return mjml2html(
-        nunjucks.renderString(
+        nunjucksEnv.renderString(
             fs.readFileSync(
                 templatePath,
                 {
@@ -129,7 +141,7 @@ function replaceAllCIDByPreviewUrl(data, ctx) {
 }
 
 function getTxt(templatePath, values) {
-    return nunjucks.renderString(
+    return nunjucksEnv.renderString(
         fs.readFileSync(
             templatePath,
             {

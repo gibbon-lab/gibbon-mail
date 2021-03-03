@@ -136,6 +136,12 @@ If the `lang` property is missing from the body of the request, Gibbon will fall
 
 [Gibbon](https://en.wikipedia.org/wiki/Gibbon) as an allusion to [Mandrill App](https://mandrill.com/).
 
+### Custom filters
+
+All Nunjucks features and filters are available, but often enough, you may find that not to be enough. Gibbon now supports custom filters.
+
+To learn how to do this, refer to [backend/filters/index.js](backend/filters/index.js).
+
 ### How can I keep an archive of all mails send by Gibbon-mail?
 
 Configure `BCC` variable env as below example to send all mails send by Gibbon-mail to `log@example.com` email account.
