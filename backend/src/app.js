@@ -160,7 +160,7 @@ router.post('/v1/templates/:name/preview', (ctx) => {
     const txtTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.txt`);
 
     const templates = [subjectTemplatePath, mjmlTemplatePath, txtTemplatePath];
-    
+
     for (let i = 0; i < templates.length; i++) {
         if (!fs.existsSync(templates[i])) {
             ctx.status = 404;
@@ -281,7 +281,7 @@ module.exports = function createApp(config) {
         app.context.transporter['smtp1'].verify(function (error) {
             if (error) {
                 console.error(error);
-                console.error('Smtp url:', getSmtpUrl(config))
+                console.error('Smtp url:', getSmtpUrl(config));
                 process.exit(1);
             } else {
                 console.log('Smtp server is ready to take our messages');
@@ -294,7 +294,7 @@ module.exports = function createApp(config) {
         app.context.transporter['smtp2'].verify(function (error) {
             if (error) {
                 console.error(error);
-                console.error('Smtp2 url:', getSmtp2Url(config))
+                console.error('Smtp2 url:', getSmtp2Url(config));
                 process.exit(1);
             } else {
                 console.log('Smtp server 2 is ready to take our messages');
