@@ -20,6 +20,7 @@ COPY backend/yarn.lock /src/
 RUN yarn install
 
 COPY backend/src/ /src/src/
+COPY backend/filters/ /src/filters/
 
 ENV PORT=5000
 EXPOSE 5000
