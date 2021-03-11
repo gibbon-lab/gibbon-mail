@@ -21,10 +21,10 @@ const {
     getSmtp2Url
 } = require('./utils');
 
+const nunjucksEnv = new nunjucks.Environment();
+
 try {
     const filters = require('../filters');
-
-    const nunjucksEnv = new nunjucks.Environment();
 
     Object.keys(filters).forEach((filterName) => {
         try {
