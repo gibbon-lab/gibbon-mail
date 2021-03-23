@@ -1,3 +1,5 @@
+[![CI](https://github.com/spacefill/gibbon-mail/actions/workflows/main.yml/badge.svg)](https://github.com/spacefill/gibbon-mail/actions/workflows/main.yml)
+
 # Gibbon-mail
 
 Send mails with mjml Template  and JSON Schema.
