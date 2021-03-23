@@ -1,4 +1,4 @@
-FROM node:12.18.4-alpine
+FROM node:14.26.0-alpine
 
 RUN mkdir -p /src/
 
@@ -8,7 +8,7 @@ WORKDIR /src/frontend/
 RUN yarn install
 RUN yarn run build
 
-FROM node:12.18.4-alpine
+FROM node:14.26.0-alpine
 
 RUN mkdir -p /src/
 WORKDIR /src/
