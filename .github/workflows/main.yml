@@ -44,7 +44,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          push: github.ref == 'refs/heads/master'
+          push: ${{ github.ref == 'refs/heads/master' }}
           tags: spacefill/gibbon-mail:latest
           file: docker-image/Dockerfile
       - name: Image digest
