@@ -1,20 +1,23 @@
+import React, { useState, useCallback, useRef } from 'react';
 import axios from 'axios';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import useAxios from 'axios-hooks';
 
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import {
     Button, ButtonToolbar,
-    Grid, Row, Col,
+    Container, Row, Col,
     Breadcrumb, BreadcrumbItem,
     ListGroup, ListGroupItem,
-    Panel,
-    SplitButton, MenuItem
+    Card,
+    Dropdown, ButtonGroup
 } from 'react-bootstrap';
 
 import ReactMarkdown from 'react-markdown';
-import Form from 'react-jsonschema-form';
+import Form from '@rjsf/bootstrap-4';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
+import { defaultTo, get } from 'lodash';
 
+const GetByPathWithDefault = (data, path, defaultValue) => defaultTo(get(data, path), defaultValue);
 const apiURL = process.env.REACT_APP_API_URL || `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}`;
 
 const routes = [
@@ -41,7 +44,7 @@ function App() {
     return (
         <Router>
             <div className='App'>
-                <Grid>
+                <Container>
                     <Row>
                         <Col>
                             <Breadcrumbs />
@@ -49,27 +52,32 @@ function App() {
                     </Row>
                     <Route exact path='/' component={Home} />
                     <Route exact path='/:id' component={RessourceForm} />
-                </Grid>
+                </Container>
             </div>
         </Router>
     );
 }
 
 function Home() {
-    const [mailList, setMailList] = useState([]);
+    const [
+        {
+            data: data,
+            loading: loading,
+            error: error
+        }
+    ] = useAxios(
+        `${apiURL}/v1/templates/`
+    );
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios(`${apiURL}/v1/templates/`);
-            setMailList(result.data);
-        };
-
-        fetchData();
-    }, []);
+    if (loading) return <p>Loading</p>;
+    if (error) {
+        console.error(error);
+        return <p>Error</p>;
+    }
 
     return (
         <ListGroup>
-            {mailList.map(item => (
+            {data.map(item => (
                 <ListGroupItem key={item}><NavLink to={`/${item}/`}>{item}</NavLink></ListGroupItem>
             ))}
         </ListGroup>
@@ -77,24 +85,26 @@ function Home() {
 }
 
 function RessourceForm({ match }) {
-    const [readme, setReadme] = useState(null);
-    const [jsonSchema, setJsonSchema] = useState(null);
-    const [smtpList, setSmtpList] = useState({});
+    const [
+        {
+            data: templateData,
+            error: templateError
+        }
+    ] = useAxios(
+        `${apiURL}/v1/templates/${match.params.id}`
+    );
+    const [
+        {
+            data: smtpData,
+            error: smtpError
+        }
+    ] = useAxios(
+        `${apiURL}/v1/smtp/`
+    );
+
     const [smtpSelected, setSmtpSelected] = useState('smtp1');
     const [fieldValues, setFieldValues] = useState({});
     const formEl = useRef(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            let result = await axios(`${apiURL}/v1/templates/${match.params.id}`);
-            setJsonSchema(result.data.json_schema);
-            setReadme(result.data.readme); 
-            result = await axios(`${apiURL}/v1/smtp/`);
-            setSmtpList(result.data);
-        };
-
-        fetchData();
-    }, [match.params.id]);
 
     const submitPreview = useCallback(
         () => {
@@ -121,106 +131,130 @@ function RessourceForm({ match }) {
         setSmtpSelected(eventKey);
     };
 
-    if (jsonSchema === null) return <p>Loading</p>;
+    if (templateError || smtpError) {
+        console.error(templateError || smtpError);
+    }
 
     return (
         <div>
             {
-                readme && (
-                    <Panel>
-                        <Panel.Heading>README</Panel.Heading>
-                        <Panel.Body>
-                            <ReactMarkdown source={readme} />
-                        </Panel.Body>
-                    </Panel>
+                GetByPathWithDefault(templateData, 'readme') && (
+                    <Card
+                        className='mt-1'
+                    >
+                        <Card.Header>README</Card.Header>
+                        <Card.Body>
+                            <ReactMarkdown source={GetByPathWithDefault(templateData, 'readme')} />
+                        </Card.Body>
+                    </Card>
                 )
             }
-            <Panel>
-                <Panel.Heading>Form</Panel.Heading>
-                <Panel.Body>
+            <Card
+                className={GetByPathWithDefault(templateData, 'readme') ? 'mt-3' : 'mt-1'}
+            >
+                <Card.Header>Form</Card.Header>
+                <Card.Body>
                     <Form
-                        schema={jsonSchema}
+                        schema={GetByPathWithDefault(templateData, 'json_schema', {})}
                         formData={fieldValues}
                         ref={formEl}
                     >
-                        <div className='pull-right'>
-                            <ButtonToolbar className='btn-toolbar'>
-                                <Button
-                                    bsStyle='primary'
-                                    onClick={submitPreview}>Preview</Button>
-                                {
-                                    (Object.keys(smtpList).length < 2) 
+                        <ButtonToolbar
+                            className='justify-content-end'
+                        >
+                            <Button
+                                variant='primary'
+                                onClick={submitPreview}
+                                className='mr-2'
+                            >Preview</Button>
+                            {
+                                smtpData ? (
+                                    (Object.keys(smtpData).length < 2)
                                         ? (
                                             <Button
                                                 onClick={submitSendMail}
                                             >Send mail</Button>
                                         ) : (
-                                            <SplitButton
-                                                title={smtpList[smtpSelected].label}
-                                                onClick={submitSendMail}
-                                                className='dropdown-menu-right'
-                                                id='smtp-button'
-                                            >
-                                                {Object.entries(smtpList).map(([key, {label}], i) => (
-                                                    <MenuItem
-                                                        key={i}
-                                                        eventKey={key}
-                                                        onSelect={onSelectStmp}
-                                                    >{label}</MenuItem>
-                                                ))}
-                                            </SplitButton>
+                                            <Dropdown as={ButtonGroup}>
+                                                <Button 
+                                                    onClick={submitSendMail}
+                                                    className='dropdown-menu-right'
+                                                    id='smtp-button'
+                                                    variant="success"
+                                                >
+                                                    {GetByPathWithDefault(smtpData, `${smtpSelected}.label`)}
+                                                </Button>
+
+                                                <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
+
+                                                <Dropdown.Menu>
+                                                    {Object.entries(smtpData).map(([key, {label}], i) => (
+                                                        <Dropdown.Item
+                                                            key={i}
+                                                            eventKey={key}
+                                                            onSelect={onSelectStmp}
+                                                        >{label}</Dropdown.Item>
+                                                    ))}
+                                                </Dropdown.Menu>
+                                            </Dropdown>
                                         )
-                                }
-                            </ButtonToolbar>
-                        </div>
+                                ) : null
+                            }
+                        </ButtonToolbar>
                     </Form>
-                </Panel.Body>
-            </Panel>
-            <Panel>
-                <Panel.Heading>HTML Preview</Panel.Heading>
-                <Panel.Body>
+                </Card.Body>
+            </Card>
+            <Card
+                className='mt-3'
+            >
+                <Card.Header>HTML Preview</Card.Header>
+                <Card.Body>
                     <Preview
                         resourceId={match.params.id}
                         values={fieldValues}
                         format='html' />
-                </Panel.Body>
-            </Panel>
-            <Panel>
-                <Panel.Heading>Txt Preview</Panel.Heading>
-                <Panel.Body>
+                </Card.Body>
+            </Card>
+            <Card
+                className='mt-3'
+            >
+                <Card.Header>Txt Preview</Card.Header>
+                <Card.Body>
                     <Preview
                         resourceId={match.params.id}
                         values={fieldValues}
                         format='txt' />
-                </Panel.Body>
-            </Panel>
+                </Card.Body>
+            </Card>
         </div>
     );
 }
 
 function Preview({ resourceId, values, format }) {
-    const [previewResult, setPreviewResult] = useState(null);
+    const [
+        {
+            data: data,
+            error: error
+        }
+    ] = useAxios(
+        {
+            url: `${apiURL}/v1/templates/${resourceId}/preview`,
+            method: 'POST',
+            data: values
+        }
+    );
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios.post(
-                `${apiURL}/v1/templates/${resourceId}/preview`,
-                values
-            );
-            setPreviewResult(result.data);
-        };
-        fetchData();
-    }, [resourceId, values]);
-
-    if (previewResult === null) return <p>Loading...</p>;
+    if (error) {
+        console.error(error);
+    }
 
     return (
         <div>
-            <p><strong>Subject: { previewResult.subject }</strong></p>
+            <p><strong>Subject: { GetByPathWithDefault(data, 'subject') }</strong></p>
             {
                 format === 'html'
-                    ? <div style={{all: 'unset'}} dangerouslySetInnerHTML={{ __html: previewResult[format] }} />
-                    : <pre>{previewResult[format]}</pre>
+                    ? <div style={{ all: 'unset' }} dangerouslySetInnerHTML={{ __html: GetByPathWithDefault(data, format) }} />
+                    : <pre>{GetByPathWithDefault(data, format)}</pre>
             }
         </div>
     );

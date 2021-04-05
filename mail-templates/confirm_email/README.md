@@ -8,7 +8,7 @@
 
 - first
 - second
-- third
+- `third`
 
 ```js
 bloc

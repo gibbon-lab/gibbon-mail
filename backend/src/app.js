@@ -7,7 +7,7 @@ const koaStatic = require('koa-static');
 const cors = require('@koa/cors');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
-const koaSwagger = require('koa2-swagger-ui');
+const { koaSwagger } = require('koa2-swagger-ui');
 
 const mjml2html = require('mjml');
 const nunjucks = require('nunjucks');
