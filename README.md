@@ -2,6 +2,8 @@
 
 # Gibbon-mail
 
+Docker image: https://hub.docker.com/r/spacefill/gibbon-mail
+
 Send mails with mjml Template  and JSON Schema.
 
 - Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
