@@ -25,8 +25,22 @@ jobs:
           cd frontend
           yarn install --frozen-lockfile
           yarn lint
+
+  test-backend:
+    needs: [lint-backend]
+    runs-on: ubuntu-latest
+    container: node:14-alpine
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Install dependencies and test backend
+        run: |
+          cd backend
+          yarn install --frozen-lockfile
+          yarn test
+
   build-and-push-docker-image:
-    needs: [lint-backend, lint-frontend]
+    needs: [test-backend, lint-frontend]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
