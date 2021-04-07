@@ -2,7 +2,7 @@ const createApp = require('./app');
 
 const config = require('./config.js');
 
-const app = createApp(config);
+const app = createApp();
 
 const server = app.listen(
     config.get('port'),

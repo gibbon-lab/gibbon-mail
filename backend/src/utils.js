@@ -1,4 +1,6 @@
-const getSmtpUrl = (config) => {
+const config = require('./config');
+
+const getSmtpUrl = () => {
     if (
         config.get('smtp.username') &&
         config.get('smtp.password') &&
@@ -9,7 +11,7 @@ const getSmtpUrl = (config) => {
     }
 };
 
-const getSmtp2Url = (config) => {
+const getSmtp2Url = () => {
     if (
         config.get('smtp2.username') &&
         config.get('smtp2.password') &&

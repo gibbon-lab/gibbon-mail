@@ -16,6 +16,8 @@ const nodemailer = require('nodemailer');
 const readFile = promisify(fs.readFile);
 const router = new Router();
 
+const config = require('./config.js');
+
 const {
     getSmtpUrl,
     getSmtp2Url
@@ -51,7 +53,7 @@ router.get('/v1/swagger.yaml', (ctx) => {
 
 router.get('/v1/templates/', (ctx) => {
     ctx.body = fs.readdirSync(
-        ctx.config.get('template_path'), { withFileTypes: true }
+        config.get('template_path'), { withFileTypes: true }
     )
         .filter(((f) => !f.isFile()))
         .map((f) => f.name);
@@ -59,16 +61,16 @@ router.get('/v1/templates/', (ctx) => {
 
 router.get('/v1/smtp/', (ctx) => {
     ctx.body = {
-        'smtp1': ctx.config.get('smtp')
+        'smtp1': config.get('smtp')
     };
-    if (getSmtp2Url(ctx.config)) {
-        ctx.body['smtp2'] = ctx.config.get('smtp2');
+    if (getSmtp2Url()) {
+        ctx.body['smtp2'] = config.get('smtp2');
     }
 });
 
 router.get('/v1/templates/:name', (ctx) => {
     const schemaJsonPath = path.join(
-        ctx.config.get('template_path'),
+        config.get('template_path'),
         ctx.params.name,
         'schema.json'
     );
@@ -95,7 +97,7 @@ router.get('/v1/templates/:name', (ctx) => {
     }
 
     let readme;
-    const readmeTemplatePath = path.join(ctx.config.get('template_path'), ctx.params.name, 'README.md');
+    const readmeTemplatePath = path.join(config.get('template_path'), ctx.params.name, 'README.md');
     if (fs.existsSync(readmeTemplatePath)) {
         readme = getReadme(readmeTemplatePath);
     }
@@ -142,7 +144,7 @@ function getHtml(templatePath, values) {
 }
 
 function replaceAllCIDByPreviewUrl(data, ctx) {
-    return data.replace(/(['|"])cid:(.*)(['|"])/gi, `$1${ctx.config.get('site_url')}/v1/templates/${ctx.params.name}/attachments/$2$3`);
+    return data.replace(/(['|"])cid:(.*)(['|"])/gi, `$1${config.get('site_url')}/v1/templates/${ctx.params.name}/attachments/$2$3`);
 }
 
 function getTxt(templatePath, values) {
@@ -158,7 +160,7 @@ function getTxt(templatePath, values) {
 }
 
 router.post('/v1/templates/:name/preview', (ctx) => {
-    const templatePath = path.join(ctx.config.get('template_path'), ctx.params.name);
+    const templatePath = path.join(config.get('template_path'), ctx.params.name);
 
     const subjectTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.subject`);
     const mjmlTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.mjml`);
@@ -186,7 +188,7 @@ router.post('/v1/templates/:name/preview', (ctx) => {
 });
 
 router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
-    const templatePath = path.join(ctx.config.get('template_path'), ctx.params.name);
+    const templatePath = path.join(config.get('template_path'), ctx.params.name);
 
     if (ctx.params.stmpSelected === undefined) {
         ctx.params.stmpSelected = 'smtp1';
@@ -196,7 +198,7 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     let mjmlTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.mjml`);
     let txtTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.txt`);
     const attachmentsPath = path.join(
-        ctx.config.get('template_path'),
+        config.get('template_path'),
         ctx.params.name,
         'attachments'
     );
@@ -226,7 +228,7 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
                 attachments.push({
                     filename: filename,
                     path: path.join(
-                        ctx.config.get('template_path'),
+                        config.get('template_path'),
                         ctx.params.name,
                         'attachments',
                         filename
@@ -242,10 +244,10 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
         from: ctx.request.body.from,
         to: ctx.request.body.to,
         bcc: Array.isArray(ctx.request.body.bcc)
-            ? ctx.config.get('bcc').concat(ctx.request.body.bcc)
+            ? config.get('bcc').concat(ctx.request.body.bcc)
             : typeof ctx.request.body.bcc === 'string'
-                ? [...ctx.config.get('bcc'), ctx.request.body.bcc]
-                : ctx.config.get('bcc'),
+                ? [...config.get('bcc'), ctx.request.body.bcc]
+                : config.get('bcc'),
         subject: getSubject(subjectTemplatePath, ctx.request.body),
         html: getHtml(mjmlTemplatePath, ctx.request.body),
         text: getTxt(txtTemplatePath, ctx.request.body),
@@ -256,7 +258,7 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
 
 router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
     const attachmentFilePath = path.join(
-        ctx.config.get('template_path'),
+        config.get('template_path'),
         ctx.params.name,
         'attachments',
         ctx.params.filename
@@ -271,22 +273,21 @@ router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
     ctx.body = fs.createReadStream(attachmentFilePath);
 });
 
-module.exports = function createApp(config) {
+module.exports = function createApp() {
     const app = new Koa();
-    app.context.config = config;
 
     app.context.transporter = {};
-    if (getSmtpUrl(config) === undefined) {
+    if (getSmtpUrl() === undefined) {
         app.context.transporter['smtp1'] = nodemailer.createTransport({
             streamTransport: true,
             newline: 'unix'
         });
     } else {
-        app.context.transporter['smtp1'] = nodemailer.createTransport(getSmtpUrl(config));
+        app.context.transporter['smtp1'] = nodemailer.createTransport(getSmtpUrl());
         app.context.transporter['smtp1'].verify(function (error) {
             if (error) {
                 console.error(error);
-                console.error('Smtp url:', getSmtpUrl(config));
+                console.error('Smtp url:', getSmtpUrl());
                 process.exit(1);
             } else {
                 console.log('Smtp server is ready to take our messages');
@@ -294,12 +295,12 @@ module.exports = function createApp(config) {
         });
     }
 
-    if (getSmtp2Url(config) !== undefined) {
-        app.context.transporter['smtp2'] = nodemailer.createTransport(getSmtp2Url(config));
+    if (getSmtp2Url() !== undefined) {
+        app.context.transporter['smtp2'] = nodemailer.createTransport(getSmtp2Url());
         app.context.transporter['smtp2'].verify(function (error) {
             if (error) {
                 console.error(error);
-                console.error('Smtp2 url:', getSmtp2Url(config));
+                console.error('Smtp2 url:', getSmtp2Url());
                 process.exit(1);
             } else {
                 console.log('Smtp server 2 is ready to take our messages');

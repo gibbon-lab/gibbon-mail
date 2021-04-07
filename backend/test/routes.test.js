@@ -2,9 +2,13 @@ const path = require('path');
 
 const request = require('supertest');
 
+const config = require('../src/config');
 const createApp = require('../src/app');
 
-const app = createApp(5001, path.join(__dirname, 'fixtures'));
+config.set('port', 5001);
+config.set('template_path', path.join(__dirname, 'fixtures'));
+
+const app = createApp();
 
 const server = app.listen(app.context.port);
 
