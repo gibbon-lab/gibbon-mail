@@ -7,18 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-pre {
-  padding: 1px;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 code {
-  padding: 4px;
-  color: #c7254e;
-  background-color: #f9f2f4;
-  border-radius: 4px;
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }

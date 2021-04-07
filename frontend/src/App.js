@@ -3,14 +3,17 @@ import useAxios from 'axios-hooks';
 import React, { useState, useCallback, useRef } from 'react';
 
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+
 import {
-    Button, ButtonToolbar,
-    Container, Row, Col,
-    Breadcrumb, BreadcrumbItem,
-    ListGroup, ListGroupItem,
-    Card,
-    ButtonGroup, Dropdown
-} from 'react-bootstrap';
+    Container,
+    OrderedList, ListItem,
+    VStack,
+    Flex,
+    Box, Heading,
+    Grid, GridItem,
+    Button, Select,
+    Breadcrumb, BreadcrumbItem, BreadcrumbLink
+} from '@chakra-ui/react';
 
 import ReactMarkdown from 'react-markdown';
 import Form from '@rjsf/core';
@@ -29,10 +32,17 @@ const routes = [
 ];
 
 const Breadcrumbs = withBreadcrumbs(routes)(({ breadcrumbs }) => (
-    <Breadcrumb tag='nav'>
+    <Breadcrumb
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="sm"
+        px={4}
+        py={2}
+        mb={2}
+    >
         {breadcrumbs.map(({ match, breadcrumb }) => (
-            <BreadcrumbItem active key={match.url}>
-                <NavLink to={match.url}>{breadcrumb}</NavLink>
+            <BreadcrumbItem key={match.url}>
+                <BreadcrumbLink as={NavLink} to={match.url}>{breadcrumb}</BreadcrumbLink>
             </BreadcrumbItem>
         ))}
     </Breadcrumb>
@@ -42,14 +52,18 @@ function App() {
     return (
         <Router>
             <div className='App'>
-                <Container>
-                    <Row>
-                        <Col>
+                <Container
+                    maxW="container.lg"
+                >
+                    <Grid>
+                        <GridItem>
                             <Breadcrumbs />
-                        </Col>
-                    </Row>
-                    <Route exact path='/' component={Home} />
-                    <Route exact path='/:id' component={RessourceForm} />
+                        </GridItem>
+                        <GridItem>
+                            <Route exact path='/' component={Home} />
+                            <Route exact path='/:id' component={RessourceForm} />
+                        </GridItem>
+                    </Grid>
                 </Container>
             </div>
         </Router>
@@ -73,13 +87,12 @@ function Home() {
         return <p>Error</p>;
     }
 
-
     return (
-        <ListGroup>
+        <OrderedList>
             {data.map(item => (
-                <ListGroupItem key={item}><NavLink to={`/${item}/`}>{item}</NavLink></ListGroupItem>
+                <ListItem key={item}><NavLink to={`/${item}/`}>{item}</NavLink></ListItem>
             ))}
-        </ListGroup>
+        </OrderedList>
     );
 }
 
@@ -128,9 +141,11 @@ function RessourceForm({ match }) {
         [match.params.id, smtpSelected]
     );
 
-    const onSelectStmp = (eventKey) => {
-        setSmtpSelected(eventKey);
+    const onSelectStmp = (event) => {
+        setSmtpSelected(event.target.value);
     };
+
+    console.log(smtpData);
 
     if (templateLoading || smtpLoading) return <p>Loading</p>;
     if (templateError || smtpError) {
@@ -139,93 +154,118 @@ function RessourceForm({ match }) {
     }
 
     return (
-        <div>
+        <VStack
+            spacing={4}
+            align="stretch"
+        >
             {
                 templateData.readme && (
-                    <Card
-                        className='mt-1'
+                    <Box
+                        p={5}
+                        shadow="md"
+                        borderWidth="1px"
+                        borderRadius="base"
                     >
-                        <Card.Header>README</Card.Header>
-                        <Card.Body>
+                        <Heading>README</Heading>
+                        <Container maxW="container.lg">
                             <ReactMarkdown source={templateData.readme} />
-                        </Card.Body>
-                    </Card>
+                        </Container>
+                    </Box>
                 )
             }
-            <Card
-                className={templateData.readme ? 'mt-3' : 'mt-1'}
+            <Box
+                p={5}
+                shadow="md"
+                borderWidth="1px"
+                borderRadius="base"
             >
-                <Card.Header>Form</Card.Header>
-                <Card.Body>
+                <Heading>Form</Heading>
+                <Container maxW="container.lg">
                     <Form
                         schema={templateData.json_schema}
                         formData={fieldValues}
                         ref={formEl}
                     >
-                        <ButtonToolbar
-                            className='justify-content-end'
+                        <Flex
+                            spacing={4}
+                            justify='flex-end'
+                            align="center"
                         >
                             <Button
-                                variant='primary'
+                                colorScheme="blue"
                                 onClick={submitPreview}
-                                className='mr-2'
-                            >Preview</Button>
+                                mr="4"
+                            >
+                                Preview
+                            </Button>
                             {
                                 (Object.keys(smtpData).length < 2) 
                                     ? (
                                         <Button
                                             onClick={submitSendMail}
-                                        >Send mail</Button>
+                                        >
+                                            Send mail
+                                        </Button>
                                     ) : (
-                                        <Dropdown as={ButtonGroup}>
-                                            <Button 
+                                        <>
+                                            <Button
+                                                colorScheme="green"
                                                 onClick={submitSendMail}
-                                                className='dropdown-menu-right'
-                                                id='smtp-button'
-                                                variant="success"
-                                            >{smtpData[smtpSelected].label}</Button>
-
-                                            <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
-
-                                            <Dropdown.Menu>
+                                                mr="4"
+                                            >
+                                                Send mail
+                                            </Button>
+                                            <Select
+                                                colorScheme="green"
+                                                isFullWidth={false}
+                                                defaultValue={smtpData[0]}
+                                                onChange={onSelectStmp}
+                                            >
                                                 {Object.entries(smtpData).map(([key, {label}], i) => (
-                                                    <Dropdown.Item
+                                                    <option
                                                         key={i}
-                                                        eventKey={key}
-                                                        onSelect={onSelectStmp}
-                                                    >{label}</Dropdown.Item>
+                                                        value={key}
+                                                    >
+                                                        {label}
+                                                    </option>
                                                 ))}
-                                            </Dropdown.Menu>
-                                        </Dropdown>
+                                            </Select>
+                                        </>
                                     )
                             }
-                        </ButtonToolbar>
+                        </Flex>
                     </Form>
-                </Card.Body>
-            </Card>
-            <Card
-                className='mt-3'
+                </Container>
+            </Box>
+            <Box
+                p={5}
+                shadow="md"
+                borderWidth="1px"
+                borderRadius="base"
             >
-                <Card.Header>HTML Preview</Card.Header>
-                <Card.Body>
+                <Heading>HTML Preview</Heading>
+                <Container maxW="container.lg">
                     <Preview
                         resourceId={match.params.id}
                         values={fieldValues}
                         format='html' />
-                </Card.Body>
-            </Card>
-            <Card
-                className='mt-3'
+                </Container>
+            </Box>
+            <Box
+                p={5}
+                shadow="md"
+                borderWidth="1px"
+                borderRadius="base"
             >
-                <Card.Header>Txt Preview</Card.Header>
-                <Card.Body>
+                <Heading>Txt Preview</Heading>
+                <Container maxW="container.lg">
                     <Preview
                         resourceId={match.params.id}
                         values={fieldValues}
                         format='txt' />
-                </Card.Body>
-            </Card>
-        </div>
+                </Container>
+            </Box>
+        </VStack>
     );
 }
 

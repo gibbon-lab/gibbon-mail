@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import './index.css';
+
+const theme = extendTheme();
+
+ReactDOM.render(
+    (
+        <ChakraProvider theme={theme}>
+            <App />
+        </ChakraProvider>
+    )
+    ,
+    document.getElementById('root')
+);
 
 serviceWorker.unregister();
