@@ -63,7 +63,39 @@ or if you want to contribute see this READMEs:
 
 ## Docker Image
 
-[`stephaneklein/gibbon-mail:latest`](https://hub.docker.com/r/stephaneklein/gibbon-mail/builds) Docker Image is automatically builded when [`master` branch](https://github.com/stephane-klein/gibbon-mail/tree/master/) is updated.
+[`spacefill/gibbon-mail`](https://hub.docker.com/r/spacefill/gibbon-mail) Docker
+Image is automatically builded with with our CI. We currently maintain several versions
+as we use [`semver`](https://semver.org/) to tag our docker images
+
+- `latest` tag is pushed with the last commit on `master`
+- `vX.X.X` tag are pushed when we push a new tag
+
+To see how to create a new tag see ["How to publish a new version"](/README.md#how-to-publish-a-new-version)
+
+## How to publish a new version
+
+- Every commit on `master` is release on `latest`.
+- Every [`tag`](https://github.com/spacefill/gibbon-mail/tags) is release with
+  the according version.
+
+### How to publish a tag
+
+1. Bump version
+
+```
+$ ./scripts/bump-project-to-version.sh 1.0.0
+```
+
+This will automatically update version in `package.json` for frontend and backend.
+
+2. Create a PR to release with the bumped version
+3. When your PR is merged on master create and push tag
+
+```
+$ ./scripts/create-and-push-tag.sh
+```
+
+This will automatically create a new local tag and push it.
 
 ## This project is based on this stack
 

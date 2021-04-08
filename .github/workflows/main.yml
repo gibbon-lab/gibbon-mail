@@ -39,8 +39,8 @@ jobs:
           yarn install --frozen-lockfile
           yarn test
 
-  build-and-push-docker-image:
-    needs: [test-backend, lint-frontend]
+  test-build-docker-image:
+    needs: [lint-backend, lint-frontend, test-backend]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -58,8 +58,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          push: ${{ github.ref == 'refs/heads/master' }}
-          tags: spacefill/gibbon-mail:latest
+          tags: spacefill/gibbon-mail:test-build-ci
           file: docker-image/Dockerfile
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
