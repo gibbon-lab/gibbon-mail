@@ -18,6 +18,27 @@ To generate PDF instead send mails, see this project: [gibbon-pdf](https://githu
 - I would like to allow humans to send email manually, via a simple application plugged to the same API.
 - I would like to keep a history (optionally) of all mail sent
 
+## Requirements
+
+- [direnv](https://direnv.net/)
+- [docker](https://www.docker.com/)
+- [nodejs](https://nodejs.org/en/)
+- [yarn](https://yarnpkg.com/)
+
+All versions are specified in [.tool-versions](.tool-versions).
+
+### Installation
+
+You can use [`asdf`](https://github.com/asdf-vm/asdf) to install dependencies:
+
+```sh
+$ asdf plugin-add direnv
+$ asdf plugin add nodejs
+$ asdf plugin add yarn
+$ asdf install
+$ direnv allow
+```
+
 ## Quick start
 
 Go to [`docker-image/`](docker-image/) and read the README.

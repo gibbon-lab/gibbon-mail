@@ -19,10 +19,7 @@ Access to mailhog1: http://127.0.0.1:8025/
 Access to mailhog2: http://127.0.0.1:8026/
 
 ```sh
-$ export SMTP_USERNAME=user
-$ export SMTP_PASSWORD=password
-$ export SMTP_HOST=127.0.0.1
-$ export SMTP_PORT=1025
+$ direnv allow
 ```
 
 ```sh
@@ -31,11 +28,8 @@ $ yarn run watch
 
 Access to Swagger docs: http://127.0.0.1:5000/docs/
 
-If you want to try second smtp server:
+If you want to try second smtp server, uncomment [these lines](../.envrc#9-12)
 
 ```sh
-$ export SMTP2_USERNAME=user
-$ export SMTP2_PASSWORD=password
-$ export SMTP2_HOST=127.0.0.1
-$ export SMTP2_PORT=1026
+$ direnv allow
 ```
