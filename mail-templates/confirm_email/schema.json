@@ -38,10 +38,12 @@
             "default": "john.doe@example.com"
         },
         "url": {
-            "type": "string"
+            "type": "string",
+            "default": "https://google.com"
         },
         "is_new_user": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": false
         }
     }
 }

@@ -44,6 +44,7 @@ describe('Route /v1/templates/', () => {
                 expect(response.body).toStrictEqual([
                     'confirm_email',
                     'invalid-json',
+                    'invalid-validation',
                     'json-missing'
                 ]);
             });
@@ -120,6 +121,16 @@ describe('Route /v1/templates/:name/send', () => {
             })
             .expect(404);
     });
+    it('return error when json validation fail', async () => {
+        return request(server)
+            .post('/v1/templates/invalid-validation/send')
+            .send({
+                from: 'no-reply@example.com',
+                to: 'user@example.com'
+            })
+            .expect(400);
+    });
+
     it('return html content', async () => {
         return request(server)
             .post('/v1/templates/confirm_email/send')

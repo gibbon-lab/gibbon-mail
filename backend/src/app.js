@@ -16,6 +16,7 @@ const nodemailer = require('nodemailer');
 const readFile = promisify(fs.readFile);
 const router = new Router();
 
+const { validateSchema, ValidationError } = require('./validate');
 const config = require('./config.js');
 
 const {
@@ -197,26 +198,51 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     let subjectTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.subject`);
     let mjmlTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.mjml`);
     let txtTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.txt`);
+    let jsonSchemaPath = path.join(templatePath, 'schema.json');
     const attachmentsPath = path.join(
         config.get('template_path'),
         ctx.params.name,
         'attachments'
     );
 
-    if (ctx.request.body.lang && (!fs.existsSync(subjectTemplatePath) || !fs.existsSync(mjmlTemplatePath) || !fs.existsSync(txtTemplatePath))) {
+    if (
+        ctx.request.body.lang && (
+            !fs.existsSync(subjectTemplatePath) ||
+            !fs.existsSync(mjmlTemplatePath) ||
+            !fs.existsSync(txtTemplatePath)
+        )
+    ) {
         console.warn(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`);
         subjectTemplatePath = path.join(templatePath, 'default.subject');
         mjmlTemplatePath = path.join(templatePath, 'default.mjml');
         txtTemplatePath = path.join(templatePath, 'default.txt');
     }
 
-    const templates = [subjectTemplatePath, mjmlTemplatePath, txtTemplatePath];
+    const templates = [
+        subjectTemplatePath,
+        mjmlTemplatePath,
+        txtTemplatePath,
+        jsonSchemaPath
+    ];
 
     for (let i = 0; i < templates.length; i++) {
         if (!fs.existsSync(templates[i])) {
             ctx.status = 404;
             ctx.body = `Template ${templates[i]} not exists`;
             return;
+        }
+    }
+
+    try {
+        await validateSchema(jsonSchemaPath, ctx.request.body);
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            console.error(error);
+            ctx.status = 400;
+            ctx.body = error.validate.errors;
+            return;
+        } else {
+            throw error;
         }
     }
 

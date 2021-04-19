@@ -60,7 +60,7 @@ or if you want to contribute see this READMEs:
 - [x] Swagger
 - [x] Multi language mail template support #8
 - [x] Add [UISchema](https://react-jsonschema-form.readthedocs.io/en/latest/) support
-- [ ] Check json input with JSON Schema
+- [x] Check json input with JSON Schema
 - [ ] Test frontend
 - [X] Configure CI
 - [ ] Add option to save mail sent (in PostgreSQL)
