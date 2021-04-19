@@ -155,9 +155,11 @@ function RessourceForm({ match }) {
                 <Card.Header>Form</Card.Header>
                 <Card.Body>
                     <Form
+                        noHtml5Validate
                         schema={GetByPathWithDefault(templateData, 'json_schema', {})}
                         formData={fieldValues}
                         ref={formEl}
+                        onClick={submitSendMail}
                     >
                         <ButtonToolbar
                             className='justify-content-end'
@@ -172,12 +174,12 @@ function RessourceForm({ match }) {
                                     (Object.keys(smtpData).length < 2)
                                         ? (
                                             <Button
-                                                onClick={submitSendMail}
+                                                type='submit'
                                             >Send mail</Button>
                                         ) : (
                                             <Dropdown as={ButtonGroup}>
                                                 <Button 
-                                                    onClick={submitSendMail}
+                                                    type='submit'
                                                     className='dropdown-menu-right'
                                                     id='smtp-button'
                                                     variant="success"

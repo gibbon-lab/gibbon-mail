@@ -25,6 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "3.1.0",
+    "ajv": "8.1.0",
     "convict": "6.0.1",
     "koa": "2.13.1",
     "koa-bodyparser": "4.3.0",
