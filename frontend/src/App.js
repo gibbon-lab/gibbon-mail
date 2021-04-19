@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import useAxios from 'axios-hooks';
 
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink, useParams } from 'react-router-dom';
 import {
     Button, ButtonToolbar,
     Container, Row, Col,
@@ -84,14 +84,19 @@ function Home() {
     );
 }
 
-function RessourceForm({ match }) {
+function RessourceForm() {
+    const { id: templateId } = useParams();
+    const [smtpSelected, setSmtpSelected] = useState('smtp1');
+    const [fieldValues, setFieldValues] = useState({});
+    const [previewValue, setPreviewValues] = useState(fieldValues);
+
     const [
         {
             data: templateData,
             error: templateError
         }
     ] = useAxios(
-        `${apiURL}/v1/templates/${match.params.id}`
+        `${apiURL}/v1/templates/${templateId}`
     );
     const [
         {
@@ -100,31 +105,6 @@ function RessourceForm({ match }) {
         }
     ] = useAxios(
         `${apiURL}/v1/smtp/`
-    );
-
-    const [smtpSelected, setSmtpSelected] = useState('smtp1');
-    const [fieldValues, setFieldValues] = useState({});
-    const formEl = useRef(null);
-
-    const submitPreview = useCallback(
-        () => {
-            setFieldValues(formEl.current.state.formData);
-        },
-        []
-    );
-
-    const submitSendMail = useCallback(
-        () => {
-            setFieldValues(formEl.current.state.formData);
-            const sendMail = async () => {
-                await axios.post(
-                    `${apiURL}/v1/templates/${match.params.id}/send/${smtpSelected}`,
-                    formEl.current.state.formData
-                );
-            };
-            sendMail(match.params.id);
-        },
-        [match.params.id, smtpSelected]
     );
 
     const onSelectStmp = (eventKey) => {
@@ -158,17 +138,24 @@ function RessourceForm({ match }) {
                         noHtml5Validate
                         schema={GetByPathWithDefault(templateData, 'json_schema', {})}
                         formData={fieldValues}
-                        ref={formEl}
-                        onClick={submitSendMail}
+                        onChange={e => setFieldValues(e.formData)}
+                        onSubmit={async () => {
+                            await axios.post(
+                                `${apiURL}/v1/templates/${templateId}/send/${smtpSelected}`,
+                                fieldValues
+                            );
+                        }}
                     >
                         <ButtonToolbar
                             className='justify-content-end'
                         >
                             <Button
                                 variant='primary'
-                                onClick={submitPreview}
                                 className='mr-2'
-                            >Preview</Button>
+                                onClick={() => setPreviewValues(fieldValues)}
+                            >
+                                Preview
+                            </Button>
                             {
                                 smtpData ? (
                                     (Object.keys(smtpData).length < 2)
@@ -178,7 +165,7 @@ function RessourceForm({ match }) {
                                             >Send mail</Button>
                                         ) : (
                                             <Dropdown as={ButtonGroup}>
-                                                <Button 
+                                                <Button
                                                     type='submit'
                                                     className='dropdown-menu-right'
                                                     id='smtp-button'
@@ -212,9 +199,10 @@ function RessourceForm({ match }) {
                 <Card.Header>HTML Preview</Card.Header>
                 <Card.Body>
                     <Preview
-                        resourceId={match.params.id}
-                        values={fieldValues}
-                        format='html' />
+                        resourceId={templateId}
+                        values={previewValue}
+                        format='html'
+                    />
                 </Card.Body>
             </Card>
             <Card
@@ -223,9 +211,10 @@ function RessourceForm({ match }) {
                 <Card.Header>Txt Preview</Card.Header>
                 <Card.Body>
                     <Preview
-                        resourceId={match.params.id}
-                        values={fieldValues}
-                        format='txt' />
+                        resourceId={templateId}
+                        values={previewValue}
+                        format='txt'
+                    />
                 </Card.Body>
             </Card>
         </div>
