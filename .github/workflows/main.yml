@@ -1,6 +1,8 @@
 name: CI
 
-on: [push, workflow_dispatch]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   lint-backend:
@@ -62,3 +64,75 @@ jobs:
           file: docker-image/Dockerfile
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  pre-release:
+    name: "Pre Release"
+    needs: [lint-backend, lint-frontend, test-backend, test-build-docker-image]
+    if: ${{ github.repository == 'spacefill/gibbon-mail' && contains(github.ref, 'refs/heads/master') }}
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.SPACEFILL_DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.SPACEFILL_DOCKER_REGISTRY_PASSWORD }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: spacefill/gibbon-mail:latest
+          file: docker-image/Dockerfile
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+
+  tagged-release:
+    name: "Tagged Release"
+    needs: [lint-backend, lint-frontend, test-backend, test-build-docker-image]
+    if: ${{ github.repository == 'spacefill/gibbon-mail' && contains(github.ref, 'refs/tags/v') }}
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Generate version variable
+        id: branch_name
+        run: echo ::set-output name=TAG_VERSION::${GITHUB_REF#refs/tags/v}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.SPACEFILL_DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.SPACEFILL_DOCKER_REGISTRY_PASSWORD }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: spacefill/gibbon-mail:${{ steps.branch_name.outputs.TAG_VERSION }}
+          file: docker-image/Dockerfile
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
