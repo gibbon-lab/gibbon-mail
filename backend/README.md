@@ -4,15 +4,16 @@
 $ yarn install
 ```
 
-```sh
-$ yarn run test
-```
-
 You can start [mailhog](https://github.com/mailhog/MailHog):
 
 ```sh
 $ docker-compose up -d
 ```
+
+```sh
+$ yarn run test
+```
+
 
 Access to mailhog1: http://127.0.0.1:8025/
 Access to mailhog2: http://127.0.0.1:8026/
