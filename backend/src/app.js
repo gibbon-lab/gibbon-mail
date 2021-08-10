@@ -163,9 +163,22 @@ function getTxt(templatePath, values) {
 router.post('/v1/templates/:name/preview', (ctx) => {
     const templatePath = path.join(config.get('template_path'), ctx.params.name);
 
-    const subjectTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.subject`);
-    const mjmlTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.mjml`);
-    const txtTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.txt`);
+    let subjectTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.subject`);
+    let mjmlTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.mjml`);
+    let txtTemplatePath = path.join(templatePath, `${ctx.request.body.lang || 'default'}.txt`);
+
+    if (
+        ctx.request.body.lang && (
+            !fs.existsSync(subjectTemplatePath) ||
+            !fs.existsSync(mjmlTemplatePath) ||
+            !fs.existsSync(txtTemplatePath)
+        )
+    ) {
+        console.warn(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`);
+        subjectTemplatePath = path.join(templatePath, 'default.subject');
+        mjmlTemplatePath = path.join(templatePath, 'default.mjml');
+        txtTemplatePath = path.join(templatePath, 'default.txt');
+    }
 
     const templates = [subjectTemplatePath, mjmlTemplatePath, txtTemplatePath];
 
