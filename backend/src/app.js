@@ -26,21 +26,6 @@ const {
 
 const nunjucksEnv = new nunjucks.Environment();
 
-try {
-    const filters = require('../filters');
-
-    Object.keys(filters).forEach((filterName) => {
-        try {
-            nunjucksEnv.addFilter(filterName, filters[filterName]);
-            console.log(`Successfully loaded filter: ${filterName}`);
-        } catch (error) {
-            console.error(`Failed to load filter: ${filterName}`, error);
-        }
-    });
-} catch (error) {
-    console.log(error);
-}
-
 router.get('/v1/', (ctx) => {
     ctx.body = {
         version: '0.1.0'
@@ -312,62 +297,72 @@ router.get('/v1/templates/:name/attachments/:filename', async (ctx) => {
     ctx.body = fs.createReadStream(attachmentFilePath);
 });
 
-module.exports = function createApp() {
-    const app = new Koa();
+module.exports = {
+    createApp: function createApp() {
+        const app = new Koa();
 
-    app.context.transporter = {};
-    if (getSmtpUrl() === undefined) {
-        app.context.transporter['smtp1'] = nodemailer.createTransport({
-            streamTransport: true,
-            newline: 'unix'
-        });
-    } else {
-        app.context.transporter['smtp1'] = nodemailer.createTransport(getSmtpUrl());
-        app.context.transporter['smtp1'].verify(function (error) {
-            if (error) {
-                console.error(error);
-                console.error('Smtp url:', getSmtpUrl());
-                process.exit(1);
-            } else {
-                console.log('Smtp server is ready to take our messages');
-            }
-        });
-    }
+        app.context.transporter = {};
+        if (getSmtpUrl() === undefined) {
+            app.context.transporter['smtp1'] = nodemailer.createTransport({
+                streamTransport: true,
+                newline: 'unix'
+            });
+        } else {
+            app.context.transporter['smtp1'] = nodemailer.createTransport(getSmtpUrl());
+            app.context.transporter['smtp1'].verify(function (error) {
+                if (error) {
+                    console.error(error);
+                    console.error('Smtp url:', getSmtpUrl());
+                    process.exit(1);
+                } else {
+                    console.log('Smtp server is ready to take our messages');
+                }
+            });
+        }
 
-    if (getSmtp2Url() !== undefined) {
-        app.context.transporter['smtp2'] = nodemailer.createTransport(getSmtp2Url());
-        app.context.transporter['smtp2'].verify(function (error) {
-            if (error) {
-                console.error(error);
-                console.error('Smtp2 url:', getSmtp2Url());
-                process.exit(1);
-            } else {
-                console.log('Smtp server 2 is ready to take our messages');
-            }
-        });
-    }
+        if (getSmtp2Url() !== undefined) {
+            app.context.transporter['smtp2'] = nodemailer.createTransport(getSmtp2Url());
+            app.context.transporter['smtp2'].verify(function (error) {
+                if (error) {
+                    console.error(error);
+                    console.error('Smtp2 url:', getSmtp2Url());
+                    process.exit(1);
+                } else {
+                    console.log('Smtp server 2 is ready to take our messages');
+                }
+            });
+        }
 
-    app.use(bodyParser());
-    app.use(cors());
-    app.use(router.routes());
-    app.use(
-        koaSwagger({
-            routePrefix: '/docs/',
-            swaggerOptions: {
-                url: '/v1/swagger.yaml'
-            },
-            hideTopbar: true
-        })
-    );
+        app.use(bodyParser());
+        app.use(cors());
+        app.use(router.routes());
+        app.use(
+            koaSwagger({
+                routePrefix: '/docs/',
+                swaggerOptions: {
+                    url: '/v1/swagger.yaml'
+                },
+                hideTopbar: true
+            })
+        );
 
-    if (config.get('static_path')) {
-        app.use(koaStatic(config.get('static_path')));
-        app.use(async (ctx, next) => {
-            ctx.type = 'html';
-            ctx.body = await readFile(`${config.get('static_path')}/index.html`);
-            await next();
-        });
-    }
+        let staticPath = undefined;
+        if (!(require.main === module)) { // If package is used as dependency
+            staticPath = path.join(__dirname, '../front/');
+        } else if (config.get('static_path')) {
+            staticPath = config.get('static_path');
+        }
 
-    return app;
+        if (staticPath) {
+            app.use(koaStatic(staticPath));
+            app.use(async (ctx, next) => {
+                ctx.type = 'html';
+                ctx.body = await readFile(`${staticPath}/index.html`);
+                await next();
+            });
+        }
+
+        return app;
+    },
+    nunjucksEnv
 };

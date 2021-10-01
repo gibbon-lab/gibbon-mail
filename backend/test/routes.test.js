@@ -3,7 +3,7 @@ const path = require('path');
 const request = require('supertest');
 
 const config = require('../src/config');
-const createApp = require('../src/app');
+const { createApp } = require('../src/app');
 
 config.set('port', 5001);
 config.set('template_path', path.join(__dirname, 'fixtures'));
