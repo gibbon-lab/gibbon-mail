@@ -1,8 +1,6 @@
-node_modules/
 test/
 .eslintrc.json
 .dockerignore
 .gitignore
 README.md
-.npmignore
 docker-compose.yml

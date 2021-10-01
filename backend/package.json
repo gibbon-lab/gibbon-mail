@@ -1,11 +1,11 @@
 {
-  "name": "gibbon-mail-backend",
-  "version": "0.0.1",
-  "private": true,
-  "main": "server.js",
+  "name": "@spacefill/gibbon-mail",
+  "private": false,
+  "main": "src/index.js",
+  "bin": "src/cli.js",
   "scripts": {
-    "start": "node src/server.js",
-    "watch": "nodemon  src/server.js",
+    "start": "node src/cli.js",
+    "watch": "nodemon  src/cli.js",
     "lint": "eslint --ignore-path .gitignore .",
     "pretest": "eslint --ignore-path .gitignore .",
     "test": "jest"
@@ -21,8 +21,15 @@
     "nunjucks",
     "jsonschema"
   ],
-  "author": "",
+  "author": "SpaceFill <stephane+npm-gibbon-mail@spacefill.fr>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spacefill/gibbon-mail.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "@koa/cors": "3.1.0",
     "ajv": "8.1.0",
