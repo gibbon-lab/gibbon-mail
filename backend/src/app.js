@@ -16,7 +16,7 @@ const nodemailer = require('nodemailer');
 const readFile = promisify(fs.readFile);
 const router = new Router();
 
-const { validateSchema, ValidationError } = require('./validate');
+const { validateSchema } = require('./validate');
 const config = require('./config.js');
 
 const {
@@ -234,14 +234,8 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     try {
         await validateSchema(jsonSchemaPath, ctx.request.body);
     } catch (error) {
-        if (error instanceof ValidationError) {
-            console.error(error);
-            ctx.status = 400;
-            ctx.body = error.validate.errors;
-            return;
-        } else {
-            throw error;
-        }
+        // For now print warning instead of return error
+        console.warn(error);
     }
 
     const attachments = [];

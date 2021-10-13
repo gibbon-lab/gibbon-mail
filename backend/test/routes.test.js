@@ -121,15 +121,6 @@ describe('Route /v1/templates/:name/send', () => {
             })
             .expect(404);
     });
-    it('return error when json validation fail', async () => {
-        return request(server)
-            .post('/v1/templates/invalid-validation/send')
-            .send({
-                from: 'no-reply@example.com',
-                to: 'user@example.com'
-            })
-            .expect(400);
-    });
 
     it('return html content', async () => {
         return request(server)
