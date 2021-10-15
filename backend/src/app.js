@@ -175,7 +175,9 @@ router.post('/v1/templates/:name/preview', (ctx) => {
         )
     ) {
         Sentry.withScope((scope) => {
-            scope.setContext('request', ctx.request);
+            scope.addEventProcessor(function (event) {
+                return Sentry.Handlers.parseRequest(event, ctx.request);
+            });
             console.error(new Error(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`));
         });
         subjectTemplatePath = path.join(templatePath, 'default.subject');
@@ -229,7 +231,9 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
         )
     ) {
         Sentry.withScope((scope) => {
-            scope.setContext('request', ctx.request);
+            scope.addEventProcessor(function (event) {
+                return Sentry.Handlers.parseRequest(event, ctx.request);
+            });
             console.error(new Error(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`));
         });
         subjectTemplatePath = path.join(templatePath, 'default.subject');
@@ -256,7 +260,9 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
         await validateSchema(jsonSchemaPath, ctx.request.body);
     } catch (error) {
         Sentry.withScope((scope) => {
-            scope.setContext('request', ctx.request);
+            scope.addEventProcessor(function (event) {
+                return Sentry.Handlers.parseRequest(event, ctx.request);
+            });
             console.error(error);
         });
     }

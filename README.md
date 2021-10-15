@@ -54,6 +54,7 @@ $ direnv allow
 - [x] Check json input with JSON Schema
 - [ ] Test frontend
 - [X] Configure CI
+- [X] Add [Sentry](https://sentry.io/)
 - [ ] Add option to save mail sent (in PostgreSQL)
 
 [See other issues...](https://github.com/stephane-klein/gibbon-mail/issues)
