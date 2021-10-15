@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 
+const Sentry = require('@sentry/node');
 const Koa = require('koa');
 const koaStatic = require('koa-static');
 const cors = require('@koa/cors');
@@ -21,10 +22,24 @@ const config = require('./config.js');
 
 const {
     getSmtpUrl,
-    getSmtp2Url
+    getSmtp2Url,
+    overrideConsoleErrorToAddSentryCapture
 } = require('./utils');
 
 const nunjucksEnv = new nunjucks.Environment();
+
+if (config.get('sentryDSN')) {
+    console.log('Sentry enabled');
+    Sentry.init({
+        dsn: config.get('sentryDSN'),
+        release: config.get('sentryRelease'),
+        attachStacktrace: true,
+        normalizeDepth: 11,
+        environment: config.get('sentryEnvironment')
+    });
+
+    overrideConsoleErrorToAddSentryCapture();
+}
 
 router.get('/v1/', (ctx) => {
     ctx.body = {
@@ -159,7 +174,10 @@ router.post('/v1/templates/:name/preview', (ctx) => {
             !fs.existsSync(txtTemplatePath)
         )
     ) {
-        console.warn(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`);
+        Sentry.withScope((scope) => {
+            scope.setContext('request', ctx.request);
+            console.error(new Error(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`));
+        });
         subjectTemplatePath = path.join(templatePath, 'default.subject');
         mjmlTemplatePath = path.join(templatePath, 'default.mjml');
         txtTemplatePath = path.join(templatePath, 'default.txt');
@@ -210,7 +228,10 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
             !fs.existsSync(txtTemplatePath)
         )
     ) {
-        console.warn(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`);
+        Sentry.withScope((scope) => {
+            scope.setContext('request', ctx.request);
+            console.error(new Error(`Can't find all "${ctx.request.body.lang}" files for this template, fallbacking to default language`));
+        });
         subjectTemplatePath = path.join(templatePath, 'default.subject');
         mjmlTemplatePath = path.join(templatePath, 'default.mjml');
         txtTemplatePath = path.join(templatePath, 'default.txt');
@@ -234,8 +255,10 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     try {
         await validateSchema(jsonSchemaPath, ctx.request.body);
     } catch (error) {
-        // For now print warning instead of return error
-        console.warn(error);
+        Sentry.withScope((scope) => {
+            scope.setContext('request', ctx.request);
+            console.error(error);
+        });
     }
 
     const attachments = [];

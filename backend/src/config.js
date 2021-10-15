@@ -19,6 +19,24 @@ const config = Convict({
         default: undefined,
         env: 'STATIC_PATH'
     },
+    sentryDSN: {
+        doc: 'Sentry DSN URL',
+        format: String,
+        default: '',
+        env: 'SENTRY_DSN'
+    },
+    sentryEnvironment: {
+        doc: 'Sentry environment name',
+        format: String,
+        default: 'unknown',
+        env: 'SENTRY_ENVIRONMENT'
+    },
+    sentryRelease: {
+        doc: 'Sentry release',
+        format: String,
+        default: '',
+        env: 'SENTRY_RELEASE'
+    },
     smtp: {
         username: {
             doc: 'Stmp username used for authentification (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',

@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@koa/cors": "3.1.0",
+    "@sentry/node": "6.13.3",
     "ajv": "8.1.0",
     "convict": "6.0.1",
     "koa": "2.13.1",
