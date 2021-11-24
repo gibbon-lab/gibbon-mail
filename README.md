@@ -18,6 +18,8 @@ To generate PDF instead send mails, see this project: [gibbon-pdf](https://githu
 - I would like to allow humans to send email manually, via a simple application plugged to the same API.
 - I would like to keep a history (optionally) of all mail sent
 
+See also Gibbon-mail alternative project: [Catapulte](https://github.com/jdrouet/catapulte) (Rust implementation of catapulte email sender).
+
 ## Features
 
 - Send email from:
