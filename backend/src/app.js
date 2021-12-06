@@ -9,6 +9,9 @@ const cors = require('@koa/cors');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const { koaSwagger } = require('koa2-swagger-ui');
+const omitBy = require('lodash/omitBy');
+const isNil = require('lodash/isNil');
+const get = require('lodash/get');
 
 const mjml2html = require('mjml');
 const nunjucks = require('nunjucks');
@@ -287,9 +290,12 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
         }
     }
 
-    const result = await ctx.transporter[ctx.params.stmpSelected].sendMail({
+    const result = await ctx.transporter[ctx.params.stmpSelected].sendMail(omitBy({
         from: ctx.request.body.from,
         to: ctx.request.body.to,
+        messageId: get(ctx, 'request.body.messageId'),
+        inReplyTo: get(ctx, 'request.body.inReplyTo'),
+        references: get(ctx, 'request.body.references'),
         bcc: Array.isArray(ctx.request.body.bcc)
             ? config.get('bcc').concat(ctx.request.body.bcc)
             : typeof ctx.request.body.bcc === 'string'
@@ -299,7 +305,16 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
         html: getHtml(mjmlTemplatePath, ctx.request.body),
         text: getTxt(txtTemplatePath, ctx.request.body),
         attachments: attachments
-    });
+    }, isNil));
+
+    const smtp1 = config.get('smtp');
+    const smtp2 = config.get('smtp2');
+    if (ctx.params.stmpSelected === 'smtp1' && smtp1.awsSesMessageIdHost) {
+        result.messageId = `${result.response.split(' ')[2]}@${smtp1.awsSesMessageIdHost}`;
+    } else if (ctx.params.stmpSelected === 'smtp2' && smtp2.awsSesMessageIdHost) {
+        result.messageId = `${result.response.split(' ')[2]}@${smtp2.awsSesMessageIdHost}`;
+    }
+
     ctx.body = { result: result };
 });
 
