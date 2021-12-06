@@ -128,6 +128,9 @@ describe('Route /v1/templates/:name/send', () => {
             .send({
                 from: 'no-reply@example.com',
                 to: 'user@example.com',
+                messageId: '6ecf545e-fda0-4ce5-af2c-223ce0dabc75@example.com',
+                inReplyTo: '2207e2f5-c9e0-4882-9070-b5b7f9557d9d@example.com',
+                references: ['3ca27fec-040d-4d9b-ba41-0c2531f9570e@example.com', '1deffaa0-1666-4ff0-852b-f265da8b37f4@example.com'],
                 application_name: 'My app',
                 username: 'john-doe',
                 confirm_email: 'john-doe@example.com',

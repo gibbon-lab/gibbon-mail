@@ -62,6 +62,12 @@ const config = Convict({
             default: undefined,
             env: 'SMTP_PORT'
         },
+        awsSesMessageIdHost: {
+            doc: 'Smtp host of the message id when using SES, to allow gibbon-mail to return formatted message id',
+            format: String,
+            default: undefined,
+            env: 'SMTP_AWS_SES_MESSAGE_ID_HOST'
+        },
         options: {
             doc: 'Stmp options (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
             format: String,
@@ -99,6 +105,12 @@ const config = Convict({
             format: String,
             default: undefined,
             env: 'SMTP2_PORT'
+        },
+        awsSesMessageIdHost: {
+            doc: 'Smtp host of the message id when using SES, to allow gibbon-mail to return formatted message id',
+            format: String,
+            default: undefined,
+            env: 'SMTP2_AWS_SES_MESSAGE_ID_HOST'
         },
         options: {
             doc: 'Stmp options (for instance: smtp://user:password@127.0.0.1:1025/?pool=true more information https://nodemailer.com/smtp/)',
