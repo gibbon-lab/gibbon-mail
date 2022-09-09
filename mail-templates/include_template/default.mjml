@@ -2,11 +2,15 @@
   <mj-body>
     <mj-section background-color="white">
       <mj-column>
-        <mj-text>    
+        <mj-text>
           <p>Hi {{ username }}!</p>
 
           <p>Thanks for signing up for {{ application_name }}!</p>
+        </mj-text>
 
+        <mj-image width="100px" src="cid:gibbon.png" />
+
+        <mj-text>
           <p>Please confirm your email ({{ confirm_email|safe }}) by clicking the link below:</p>
         </mj-text>
 
@@ -17,16 +21,20 @@
             color="white"
             >Confirm</mj-button>
 
-        <mj-text>    
+        <mj-text>
           <p>This link will expire in 48 hours.</p>
+        </mj-text>
 
 {% if is_new_user %}
+        <mj-text>
           <p>If you did not sign up, you may simply ignore this email.</p>
-{% else %}
-          <p>If you did not make this request, you may simply ignore this email.</p>
-{% endif %}
-          {% include "confirm_email/email_signature.mjml" ignore missing %}
         </mj-text>
+{% else %}
+        <mj-text>
+          <p>If you did not make this request, you may simply ignore this email.</p>
+        </mj-text>
+{% endif %}
+        {% include "include_template/email_signature.mjml" ignore missing %}
       </mj-column>
     </mj-section>
   </mj-body>
