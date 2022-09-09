@@ -1,0 +1,61 @@
+{
+    "type": "object",
+    "required": [
+        "from",
+        "to",
+        "username",
+        "confirm_email",
+        "url",
+        "is_new_user"
+    ],
+    "properties": {
+        "application_name": {
+            "type": "string",
+            "default": "My application"
+        },
+        "from": {
+            "type": "string",
+            "default": "noreply@example.com"
+        },
+        "to": {
+            "type": "string",
+            "default": "john-doe@example.com"
+        },
+        "messageId": {
+            "type": "string"
+        },
+        "inReplyTo": {
+            "type": "string"
+        },
+        "references": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "username": {
+            "type": "string",
+            "default": "john-doe"
+        },
+        "firstname": {
+            "type": "string",
+            "default": "John"
+        },
+        "lastname": {
+            "type": "string",
+            "default": "Doe"
+        },
+        "confirm_email": {
+            "type": "string",
+            "default": "john.doe@example.com"
+        },
+        "url": {
+            "type": "string",
+            "default": "https://google.com"
+        },
+        "is_new_user": {
+            "type": "boolean",
+            "default": false
+        }
+    }
+}

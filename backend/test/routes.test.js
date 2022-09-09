@@ -3,10 +3,10 @@ const path = require('path');
 const request = require('supertest');
 
 const config = require('../src/config');
-const { createApp } = require('../src/app');
-
 config.set('port', 5001);
 config.set('template_path', path.join(__dirname, 'fixtures'));
+
+const { createApp } = require('../src/app');
 
 const app = createApp();
 
@@ -83,7 +83,7 @@ describe('Route /v1/templates/:name/preview', () => {
             })
             .expect(404);
     });
-    it('return html content', async () => {
+    it('return html content with template include', async () => {
         return request(server)
             .post('/v1/templates/confirm_email/preview')
             .send({
@@ -106,6 +106,13 @@ describe('Route /v1/templates/:name/preview', () => {
                 );
                 expect(response.body.txt).toContain(
                     'Hi john-doe!'
+                );
+                // template include test
+                expect(response.body.html).toContain(
+                    'Best Regards,'
+                );
+                expect(response.body.txt).toContain(
+                    'Best Regards,'
                 );
             });
     });

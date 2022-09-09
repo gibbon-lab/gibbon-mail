@@ -29,7 +29,7 @@ const {
     overrideConsoleErrorToAddSentryCapture
 } = require('./utils');
 
-const nunjucksEnv = new nunjucks.Environment();
+const nunjucksEnv = new nunjucks.configure(config.get('template_path'), {watch: process.env.NODE_ENV === 'development' ? true : false});
 
 if (config.get('sentryDSN')) {
     console.log('Sentry enabled');
@@ -122,29 +122,11 @@ function getReadme(templatePath) {
 }
 
 function getSubject(templatePath, values) {
-    return nunjucksEnv.renderString(
-        fs.readFileSync(
-            templatePath,
-            {
-                encoding: 'utf8'
-            }
-        ),
-        values
-    );
+    return renderFromFile(templatePath, values);
 }
 
 function getHtml(templatePath, values) {
-    return mjml2html(
-        nunjucksEnv.renderString(
-            fs.readFileSync(
-                templatePath,
-                {
-                    encoding: 'utf8'
-                }
-            ),
-            values
-        )
-    ).html;
+    return mjml2html(renderFromFile(templatePath, values)).html;
 }
 
 function replaceAllCIDByPreviewUrl(data, ctx) {
@@ -152,15 +134,11 @@ function replaceAllCIDByPreviewUrl(data, ctx) {
 }
 
 function getTxt(templatePath, values) {
-    return nunjucksEnv.renderString(
-        fs.readFileSync(
-            templatePath,
-            {
-                encoding: 'utf8'
-            }
-        ),
-        values
-    );
+    return renderFromFile(templatePath, values);
+}
+
+function renderFromFile(templatePath, values) {
+    return nunjucksEnv.render( path.relative(config.get('template_path'), templatePath), values );
 }
 
 router.post('/v1/templates/:name/preview', (ctx) => {
