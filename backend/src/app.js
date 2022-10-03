@@ -291,6 +291,9 @@ router.post('/v1/templates/:name/send/:stmpSelected?', async (ctx) => {
     }
 
     const result = await ctx.transporter[ctx.params.stmpSelected].sendMail(omitBy({
+        headers:{
+            'X-Gibbon-Mail': ctx.params.name
+        },
         from: ctx.request.body.from,
         to: ctx.request.body.to,
         messageId: get(ctx, 'request.body.messageId'),
