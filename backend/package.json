@@ -1,5 +1,5 @@
 {
-  "name": "@spacefill/gibbon-mail",
+  "name": "@gibbon-lab/gibbon-mail",
   "version": "0.5.0",
   "private": false,
   "main": "src/index.js",
@@ -22,11 +22,11 @@
     "nunjucks",
     "jsonschema"
   ],
-  "author": "SpaceFill <stephane+npm-gibbon-mail@spacefill.fr>",
+  "author": "Gibbon-lab <pro.alexandre.marre@gmail.com>",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spacefill/gibbon-mail.git"
+    "url": "https://github.com/gibbon-lab/gibbon-mail.git"
   },
   "engines": {
     "node": ">=14"

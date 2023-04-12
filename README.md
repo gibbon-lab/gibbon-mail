@@ -1,8 +1,8 @@
-[![CI](https://github.com/spacefill/gibbon-mail/actions/workflows/main.yml/badge.svg)](https://github.com/spacefill/gibbon-mail/actions/workflows/main.yml)
+[![CI](https://github.com/gibbon-lab/gibbon-mail/actions/workflows/main.yml/badge.svg)](https://github.com/gibbon-lab/gibbon-mail/actions/workflows/main.yml)
 
 # Gibbon-mail
 
-Docker image: https://hub.docker.com/r/spacefill/gibbon-mail
+Docker image: https://hub.docker.com/r/gibbonlab/gibbon-mail
 
 Send mails with mjml Template  and JSON Schema.
 
@@ -96,14 +96,14 @@ $ direnv allow
 You can use gibbon-mail as a standalone app:
 
 ```sh
-$ npm install -g @spacefill/gibbon-mail
+$ npm install -g @gibbon-lab/gibbon-mail
 $ gibbon-mail
 ```
 
 or as library:
 
 ```js
-const { createApp } = require('@spacefill/gibbon-mail')
+const { createApp } = require('@gibbon-lab/gibbon-mail')
 
 const app = createApp()
 
@@ -120,7 +120,7 @@ It's also available as [`docker-image`](docker-image/).
 
 ## Docker Image
 
-[`spacefill/gibbon-mail`](https://hub.docker.com/r/spacefill/gibbon-mail) Docker
+[`gibbonlab/gibbon-mail`](https://hub.docker.com/r/gibbon-lab/gibbon-mail) Docker
 Image is automatically builded with with our CI. We currently maintain several versions
 as we use [`semver`](https://semver.org/) to tag our docker images
 
@@ -139,7 +139,7 @@ If you want to contribute see those READMEs:
 ## How to publish a new github version
 
 - Every commit on `master` is release on `latest`.
-- Every [`tag`](https://github.com/spacefill/gibbon-mail/tags) is release with
+- Every [`tag`](https://github.com/gibbon-lab/gibbon-mail/tags) is release with
   the according version.
 
 ### How to publish a tag
@@ -226,13 +226,13 @@ To custom `nunjunks` you **must** use `gibbon-mail` as javascript library. You c
 You can retrieve [`nunjuncks environment`](https://mozilla.github.io/nunjucks/fr/api.html#environment):
 
 ```js
-const { nunjucksEnv } = require('@spacefill/gibbon-mail')
+const { nunjucksEnv } = require('@gibbon-lab/gibbon-mail')
 ```
 
 You can create a custom filter and add it to gibbon-mail:
 
 ```js
-const { createApp, nunjucksEnv } = require('@spacefill/gibbon-mail')
+const { createApp, nunjucksEnv } = require('@gibbon-lab/gibbon-mail')
 
 function trimFilter(input, length) {
     return String(input).slice(0, length);

@@ -13,14 +13,14 @@ To generate PDF instead send mails, see this project: [gibbon-pdf](https://githu
 You can use gibbon-mail as a standalone app:
 
 ```sh
-$ npm install -g @spacefill/gibbon-mail
+$ npm install -g @gibbon-lab/gibbon-mail
 $ gibbon-mail
 ```
 
 or as library:
 
 ```js
-const { createApp } = require('@spacefill/gibbon-mail')
+const { createApp } = require('@gibbon-lab/gibbon-mail')
 
 const app = createApp()
 
