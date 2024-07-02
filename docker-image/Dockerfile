@@ -1,4 +1,4 @@
-FROM node:16.17.1-alpine3.16
+FROM node:22.3.0-alpine3.19
 
 RUN mkdir -p /src/
 
@@ -8,7 +8,7 @@ WORKDIR /src/frontend/
 RUN yarn install
 RUN yarn run build
 
-FROM node:16.17.1-alpine3.16
+FROM node:22.3.0-alpine3.19
 
 RUN mkdir -p /src/
 WORKDIR /src/
@@ -22,6 +22,7 @@ RUN yarn install
 COPY backend/src/ /src/src/
 
 ENV PORT=5000
+ENV NODE_OPTIONS=--openssl-legacy-provider
 EXPOSE 5000
 
 ENV TEMPLATES_PATH=/templates/

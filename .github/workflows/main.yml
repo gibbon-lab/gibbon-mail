@@ -7,7 +7,7 @@ on:
 jobs:
   lint-backend:
     runs-on: ubuntu-latest
-    container: node:16.17.1-alpine3.16
+    container: node:22.3.0-alpine3.19
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -18,7 +18,7 @@ jobs:
           yarn lint
   lint-frontend:
     runs-on: ubuntu-latest
-    container: node:16.17.1-alpine3.16
+    container: node:22.3.0-alpine3.19
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
   test-backend:
     needs: [lint-backend]
     runs-on: ubuntu-latest
-    container: node:16.17.1-alpine3.16
+    container: node:22.3.0-alpine3.19
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -135,7 +135,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.17.1'
+          node-version: '22.3.0'
           registry-url: 'https://registry.npmjs.org'
       - run: scripts/deploy-to-npm.sh
         env:
