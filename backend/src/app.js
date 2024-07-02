@@ -366,7 +366,7 @@ module.exports = {
         );
 
         let staticPath = undefined;
-        if (!(require.main === module)) { // If package is used as dependency
+        if (__dirname.includes('node_modules')) { // If package is used as dependency
             staticPath = path.join(__dirname, '../front/');
         } else if (config.get('static_path')) {
             staticPath = config.get('static_path');
