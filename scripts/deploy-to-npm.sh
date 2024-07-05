@@ -10,7 +10,7 @@ cd "$(dirname "$0")/../"
 )
 
 rm -rf backend/front
-mv frontend/build backend/front
+mv frontend/dist backend/front
 
 (
     cd backend
