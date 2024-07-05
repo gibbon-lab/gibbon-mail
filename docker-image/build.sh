@@ -5,5 +5,5 @@ cd $(dirname "$0")
 
 (
     cd ..
-    docker build . -f docker-image/Dockerfile -t stephaneklein/gibbon-mail:latest
+    docker build . -f docker-image/Dockerfile -t gibbonlab/gibbon-mail:latest
 )

@@ -8,7 +8,7 @@ Send mails with mjml Template  and JSON Schema.
 
 - Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
 - Screencast: https://youtu.be/9oih7cZTjk4
-- Docker Image: https://hub.docker.com/r/stephaneklein/gibbon-mail (Automated Builds configured on `master` branch)
+- Docker Image: https://hub.docker.com/r/gibbonlab/gibbon-mail (Automated Builds configured on `master` branch)
 
 To generate PDF instead send mails, see this project: [gibbon-pdf](https://github.com/stephane-klein/gibbon-pdf)
 
@@ -61,7 +61,7 @@ $ direnv allow
 - [x] Integrate [`mjmlio/mjml`](https://github.com/mjmlio/mjml)
 - [x] Send mails with [nodemailer](https://nodemailer.com)
 - [x] Add [mailhog](https://github.com/mailhog/MailHog) to test
-- [x] Docker Image (`stephaneklein/gibbon-mail:latest`)
+- [x] Docker Image (`gibbonlab/gibbon-mail:latest`)
 - [x] curl example
 - [x] Screencast
 - [x] Swagger
@@ -250,7 +250,7 @@ Configure `BCC` variable env as below example to send all mails send by Gibbon-m
 version: "3.7"
 services:
   gibbon-mail:
-    image: stephaneklein/gibbon-mail:latest
+    image: gibbonlab/gibbon-mail:latest
     ports:
      - 5000:5000
     volumes:
@@ -274,7 +274,7 @@ Gibbon-mail support two smtp server configuration, for instance:
 version: "3.7"
 services:
   gibbon-mail:
-    image: stephaneklein/gibbon-mail:latest
+    image: gibbonlab/gibbon-mail:latest
     ports:
      - 5000:5000
     volumes:

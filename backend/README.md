@@ -4,7 +4,7 @@ Send mails with mjml Template  and JSON Schema.
 
 - Project status: [POC](https://en.wikipedia.org/wiki/Proof_of_concept)
 - Screencast: https://youtu.be/9oih7cZTjk4
-- Docker Image: https://hub.docker.com/r/stephaneklein/gibbon-mail (Automated Builds configured on `master` branch)
+- Docker Image: https://hub.docker.com/r/gibbonlab/gibbon-mail (Automated Builds configured on `master` branch)
 
 To generate PDF instead send mails, see this project: [gibbon-pdf](https://github.com/stephane-klein/gibbon-pdf)
 
