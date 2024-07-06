@@ -5,8 +5,8 @@ cd "$(dirname "$0")/../"
 
 (
     cd frontend
-    yarn
-    yarn run build
+    pnpm install
+    pnpm run build
 )
 
 rm -rf backend/front

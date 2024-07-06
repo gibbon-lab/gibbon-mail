@@ -17,9 +17,11 @@ WORKDIR /src/
 
 COPY --from=0 /src/frontend/dist/ /src/frontend/dist/
 COPY backend/package.json /src/
-COPY backend/yarn.lock /src/
+COPY backend/pnpm-lock.yaml /src/
 
-RUN yarn install
+RUN corepack enable \
+    && corepack prepare pnpm@9.4.0 --activate \
+    && pnpm install
 
 COPY backend/src/ /src/src/
 

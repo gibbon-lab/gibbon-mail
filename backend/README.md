@@ -43,7 +43,7 @@ const server = app.listen(
 Install dependencies first:
 
 ```sh
-$ yarn install
+$ pnpm install
 ```
 
 You can start [mailhog](https://github.com/mailhog/MailHog):
@@ -53,7 +53,7 @@ $ docker-compose up -d
 ```
 
 ```sh
-$ yarn run test
+$ pnpm run test
 ```
 
 Access to mailhog1: http://127.0.0.1:8025/
@@ -64,7 +64,7 @@ $ direnv allow
 ```
 
 ```sh
-$ yarn run watch
+$ pnpm run watch
 ```
 
 Access to Swagger docs: http://127.0.0.1:5000/docs/

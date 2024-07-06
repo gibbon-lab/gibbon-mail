@@ -39,7 +39,7 @@ See also Gibbon-mail alternative project: [Catapulte](https://github.com/jdrouet
 - [direnv](https://direnv.net/)
 - [docker](https://www.docker.com/)
 - [nodejs](https://nodejs.org/en/)
-- [yarn](https://yarnpkg.com/)
+- [pnpm](https://pnpm.io/)
 
 All versions are specified in [.tool-versions](.tool-versions).
 
@@ -50,7 +50,7 @@ You can use [`asdf`](https://github.com/asdf-vm/asdf) to install dependencies:
 ```sh
 $ asdf plugin-add direnv
 $ asdf plugin add nodejs
-$ asdf plugin add yarn
+$ asdf plugin add pnpm
 $ asdf install
 $ direnv allow
 ```
